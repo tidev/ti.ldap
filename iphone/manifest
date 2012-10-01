@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.0
+apiversion: 2
+description: LDAP for Titanium
+author: Jeff English
+license: Appcelerator Commercial License
+copyright: Copyright (c) 2012 by Appcelerator, Inc.
+
+
+# these should not be edited
+name: ldap
+moduleid: ti.ldap
+guid: 4cf02ff0-f57e-4643-b0bd-98077e9956ec
+platform: iphone
+minsdk: 2.1.2.GA
