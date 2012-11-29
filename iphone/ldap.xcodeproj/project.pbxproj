@@ -26,6 +26,15 @@
 		24DD6CFA1134B3F500162E58 /* TiLdapModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* TiLdapModule.m */; };
 		24DE9E1111C5FE74003F90F6 /* TiLdapModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* TiLdapModuleAssets.h */; };
 		24DE9E1211C5FE74003F90F6 /* TiLdapModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* TiLdapModuleAssets.m */; };
+		A21A063F164D98690023A19C /* TiLdapSearchResultProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A21A063D164D98690023A19C /* TiLdapSearchResultProxy.h */; };
+		A21A0640164D98690023A19C /* TiLdapSearchResultProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A21A063E164D98690023A19C /* TiLdapSearchResultProxy.m */; };
+		A2A25D7D164461CE00F5C093 /* TiLdapConnectionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */; };
+		A2A25D7E164461CE00F5C093 /* TiLdapConnectionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */; };
+		A2CEA4EB16480FA90023AF40 /* TiLdapEntryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */; };
+		A2CEA4EC16480FA90023AF40 /* TiLdapEntryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */; };
+		A2ECB34A1666A530002520CF /* libsasl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ECB3491666A530002520CF /* libsasl2.a */; };
+		A2F00AF116659EF400156CD8 /* liblber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F00AEC16659EE200156CD8 /* liblber.a */; };
+		A2F00AF216659EF400156CD8 /* libopenldap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F00AEA16659EE200156CD8 /* libopenldap.a */; };
 		AA747D9F0F9514B9006C5449 /* TiLdap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiLdap_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -36,19 +45,48 @@
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
-			remoteInfo = "ldap";
+			remoteInfo = ldap;
+		};
+		A2F00AE916659EE200156CD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A2F00AD916659EE000156CD8 /* openldap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A2E6789C1665723A0049BAB1;
+			remoteInfo = openldap;
+		};
+		A2F00AEB16659EE200156CD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A2F00AD916659EE000156CD8 /* openldap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A2F00A3E166588BC00156CD8;
+			remoteInfo = lber;
+		};
+		A2F00AEF16659EED00156CD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A2F00AD916659EE000156CD8 /* openldap.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A2E6789B1665723A0049BAB1;
+			remoteInfo = openldap;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		24DD6CF71134B3F500162E58 /* TiLdapModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TiLdapModule.h"; path = "Classes/TiLdapModule.h"; sourceTree = "<group>"; };
-		24DD6CF81134B3F500162E58 /* TiLdapModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TiLdapModule.m"; path = "Classes/TiLdapModule.m"; sourceTree = "<group>"; };
+		24DD6CF71134B3F500162E58 /* TiLdapModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapModule.h; path = Classes/TiLdapModule.h; sourceTree = "<group>"; };
+		24DD6CF81134B3F500162E58 /* TiLdapModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapModule.m; path = Classes/TiLdapModule.m; sourceTree = "<group>"; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
-		24DE9E0F11C5FE74003F90F6 /* TiLdapModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TiLdapModuleAssets.h"; path = "Classes/TiLdapModuleAssets.h"; sourceTree = "<group>"; };
-		24DE9E1011C5FE74003F90F6 /* TiLdapModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TiLdapModuleAssets.m"; path = "Classes/TiLdapModuleAssets.m"; sourceTree = "<group>"; };
-		AA747D9E0F9514B9006C5449 /* TiLdap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TiLdap_Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		24DE9E0F11C5FE74003F90F6 /* TiLdapModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapModuleAssets.h; path = Classes/TiLdapModuleAssets.h; sourceTree = "<group>"; };
+		24DE9E1011C5FE74003F90F6 /* TiLdapModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapModuleAssets.m; path = Classes/TiLdapModuleAssets.m; sourceTree = "<group>"; };
+		A21A063D164D98690023A19C /* TiLdapSearchResultProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapSearchResultProxy.h; path = Classes/TiLdapSearchResultProxy.h; sourceTree = "<group>"; };
+		A21A063E164D98690023A19C /* TiLdapSearchResultProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapSearchResultProxy.m; path = Classes/TiLdapSearchResultProxy.m; sourceTree = "<group>"; };
+		A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapConnectionProxy.h; path = Classes/TiLdapConnectionProxy.h; sourceTree = "<group>"; };
+		A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapConnectionProxy.m; path = Classes/TiLdapConnectionProxy.m; sourceTree = "<group>"; };
+		A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapEntryProxy.h; path = Classes/TiLdapEntryProxy.h; sourceTree = "<group>"; };
+		A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapEntryProxy.m; path = Classes/TiLdapEntryProxy.m; sourceTree = "<group>"; };
+		A2ECB3491666A530002520CF /* libsasl2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsasl2.a; path = "openldap/ports/security/cyrus-sasl/build/Release-iphoneos/libsasl2.a"; sourceTree = "<group>"; };
+		A2F00AD916659EE000156CD8 /* openldap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openldap.xcodeproj; path = openldap/openldap.xcodeproj; sourceTree = "<group>"; };
+		AA747D9E0F9514B9006C5449 /* TiLdap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiLdap_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libTiLdap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libTiLdap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC07E0554694100DB518D /* libTiLdap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTiLdap.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +94,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2ECB34A1666A530002520CF /* libsasl2.a in Frameworks */,
+				A2F00AF116659EF400156CD8 /* liblber.a in Frameworks */,
+				A2F00AF216659EF400156CD8 /* libopenldap.a in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -74,12 +115,14 @@
 		0867D691FE84028FC02AAC07 /* ldap */ = {
 			isa = PBXGroup;
 			children = (
+				A2ECB3491666A530002520CF /* libsasl2.a */,
+				A21A067D164DA27F0023A19C /* Dependencies */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
-			name = "ldap";
+			name = ldap;
 			sourceTree = "<group>";
 		};
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
@@ -93,10 +136,16 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A21A063D164D98690023A19C /* TiLdapSearchResultProxy.h */,
+				A21A063E164D98690023A19C /* TiLdapSearchResultProxy.m */,
 				24DE9E0F11C5FE74003F90F6 /* TiLdapModuleAssets.h */,
 				24DE9E1011C5FE74003F90F6 /* TiLdapModuleAssets.m */,
 				24DD6CF71134B3F500162E58 /* TiLdapModule.h */,
 				24DD6CF81134B3F500162E58 /* TiLdapModule.m */,
+				A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */,
+				A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */,
+				A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */,
+				A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -110,6 +159,23 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		A21A067D164DA27F0023A19C /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				A2F00AD916659EE000156CD8 /* openldap.xcodeproj */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		A2F00ADA16659EE000156CD8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2F00AEA16659EE200156CD8 /* libopenldap.a */,
+				A2F00AEC16659EE200156CD8 /* liblber.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -120,6 +186,9 @@
 				AA747D9F0F9514B9006C5449 /* TiLdap_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* TiLdapModule.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* TiLdapModuleAssets.h in Headers */,
+				A2A25D7D164461CE00F5C093 /* TiLdapConnectionProxy.h in Headers */,
+				A2CEA4EB16480FA90023AF40 /* TiLdapEntryProxy.h in Headers */,
+				A21A063F164D98690023A19C /* TiLdapSearchResultProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,9 +206,10 @@
 			buildRules = (
 			);
 			dependencies = (
+				A2F00AF016659EED00156CD8 /* PBXTargetDependency */,
 			);
-			name = "ldap";
-			productName = "ldap";
+			name = ldap;
+			productName = ldap;
 			productReference = D2AAC07E0554694100DB518D /* libTiLdap.a */;
 			productType = "com.apple.product-type.library.static";
 		};
@@ -161,6 +231,12 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* ldap */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A2F00ADA16659EE000156CD8 /* Products */;
+					ProjectRef = A2F00AD916659EE000156CD8 /* openldap.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* ldap */,
@@ -168,6 +244,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		A2F00AEA16659EE200156CD8 /* libopenldap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libopenldap.a;
+			remoteRef = A2F00AE916659EE200156CD8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A2F00AEC16659EE200156CD8 /* liblber.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = liblber.a;
+			remoteRef = A2F00AEB16659EE200156CD8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		24416B8011C4CA220047AFDD /* ShellScript */ = {
@@ -192,6 +285,9 @@
 			files = (
 				24DD6CFA1134B3F500162E58 /* TiLdapModule.m in Sources */,
 				24DE9E1211C5FE74003F90F6 /* TiLdapModuleAssets.m in Sources */,
+				A2A25D7E164461CE00F5C093 /* TiLdapConnectionProxy.m in Sources */,
+				A2CEA4EC16480FA90023AF40 /* TiLdapEntryProxy.m in Sources */,
+				A21A0640164D98690023A19C /* TiLdapSearchResultProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +298,11 @@
 			isa = PBXTargetDependency;
 			target = D2AAC07D0554694100DB518D /* ldap */;
 			targetProxy = 24416B8411C4CA280047AFDD /* PBXContainerItemProxy */;
+		};
+		A2F00AF016659EED00156CD8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = openldap;
+			targetProxy = A2F00AEF16659EED00156CD8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -221,11 +322,11 @@
 				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DSTROOT = "/tmp/TiLdap.dst";
+				DSTROOT = /tmp/TiLdap.dst;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TiLdap_Prefix.pch";
+				GCC_PREFIX_HEADER = TiLdap_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -237,14 +338,23 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					openldap/include,
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+				);
 				INSTALL_PATH = /usr/local/lib;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/iosports/ports/security/cyrus-sasl/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/openldap/ports/security/cyrus-sasl/build/Release-iphoneos\"",
+				);
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "TiLdap";
+				PRODUCT_NAME = TiLdap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -267,11 +377,11 @@
 					armv7,
 				);
 				"ARCHS[sdk=iphonesimulator*]" = i386;
-				DSTROOT = "/tmp/TiLdap.dst";
+				DSTROOT = /tmp/TiLdap.dst;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TiLdap_Prefix.pch";
+				GCC_PREFIX_HEADER = TiLdap_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -283,12 +393,21 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					openldap/include,
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+				);
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/iosports/ports/security/cyrus-sasl/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/openldap/ports/security/cyrus-sasl/build/Release-iphoneos\"",
+				);
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "TiLdap";
+				PRODUCT_NAME = TiLdap;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -310,11 +429,11 @@
 				"ARCHS[sdk=iphonesimulator*]" = i386;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DSTROOT = "/tmp/TiLdap.dst";
+				DSTROOT = /tmp/TiLdap.dst;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TiLdap_Prefix.pch";
+				GCC_PREFIX_HEADER = TiLdap_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -326,13 +445,18 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"openldap/openldap-2.4.32/include\"",
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "TiLdap";
+				PRODUCT_NAME = TiLdap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -355,11 +479,11 @@
 					armv7,
 				);
 				"ARCHS[sdk=iphonesimulator*]" = i386;
-				DSTROOT = "/tmp/TiLdap.dst";
+				DSTROOT = /tmp/TiLdap.dst;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TiLdap_Prefix.pch";
+				GCC_PREFIX_HEADER = TiLdap_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -371,11 +495,16 @@
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"openldap/openldap-2.4.32/include\"",
+					"$(TITANIUM_BASE_SDK)",
+					"$(TITANIUM_BASE_SDK2)",
+				);
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "TiLdap";
+				PRODUCT_NAME = TiLdap;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
