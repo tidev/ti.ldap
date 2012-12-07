@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -8,13 +8,13 @@
 #import "TiLdapConnectionProxy.h"
 
 @interface TiLdapSearchResultProxy : TiProxy {
-    KrollCallback *callback;
-    TiLdapConnectionProxy *connection;
-    LDAPMessage *searchResult;
-    int msgId;
+@private
+    TiLdapConnectionProxy *_connection;
+    LDAPMessage *_searchResult;
 }
 
--(id)initWithLDAPMessage:(LDAPMessage*)result_ callback:(KrollCallback*)callback_ connection:(TiLdapConnectionProxy*)connection_ pageContext:(id<TiEvaluator>)context;
--(id)initWithMsgId:(int)msgId_ callback:(KrollCallback*)callback_ connection:(TiLdapConnectionProxy*)connection_ pageContext:(id<TiEvaluator>)context;
++(TiLdapSearchResultProxy*)resultWithLDAPMessage:(LDAPMessage*)result connection:(TiLdapConnectionProxy*)connection;
+
+-(id)initWithLDAPMessage:(LDAPMessage *)result connection:(TiLdapConnectionProxy *)connection;
 
 @end

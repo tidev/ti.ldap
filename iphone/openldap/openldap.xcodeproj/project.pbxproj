@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A2C8AFF21671591300A2AE00 /* thr_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = A2F00651166585FF00156CD8 /* thr_posix.c */; };
 		A2ECB20D16667D9F002520CF /* ldap.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2F005C8166585FF00156CD8 /* ldap.h */; };
 		A2ECB20E16667D9F002520CF /* ldap_cdefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2F005C9166585FF00156CD8 /* ldap_cdefs.h */; };
 		A2ECB20F16667D9F002520CF /* ldap_schema.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2F005D5166585FF00156CD8 /* ldap_schema.h */; };
@@ -4650,6 +4651,7 @@
 				A2F00A381665885B00156CD8 /* turn.c in Sources */,
 				A2F00A391665885B00156CD8 /* txn.c in Sources */,
 				A2ECB36D1666A695002520CF /* Makefile in Sources */,
+				A2C8AFF21671591300A2AE00 /* thr_posix.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4742,6 +4744,10 @@
 				DSTROOT = /tmp/openldap.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "openldap-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = LDAP_R_COMPILE;
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "DEBUG=1";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = LDAP_R_COMPILE;
 				HEADER_SEARCH_PATHS = (
 					"openldap-2.4.33/include",
 					"ports/security/cyrus-sasl/cyrus-sasl/include",
@@ -4759,6 +4765,8 @@
 				DSTROOT = /tmp/openldap.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "openldap-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = LDAP_R_COMPILE;
+				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = LDAP_R_COMPILE;
 				HEADER_SEARCH_PATHS = (
 					"openldap-2.4.33/include",
 					"ports/security/cyrus-sasl/cyrus-sasl/include",

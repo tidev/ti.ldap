@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -9,12 +9,14 @@
 
 @interface TiLdapEntryProxy : TiProxy {
 @private
-    TiLdapConnectionProxy *connection;
-    LDAPMessage *entry;
-    BerElement *ber;
+    TiLdapConnectionProxy *_connection;
+    LDAPMessage *_entry;
+    BerElement *_ber;
 }
 
--(id)initWithLDAPMessage:(LDAPMessage*)entry_ connection:(TiLdapConnectionProxy*)connection_ pageContext:(id<TiEvaluator>)context;
++(TiLdapEntryProxy*)entryWithLDAPMessage:(LDAPMessage*)entry connection:(TiLdapConnectionProxy*)connection;
+
+-(id)initWithLDAPMessage:(LDAPMessage*)entry connection:(TiLdapConnectionProxy*)connection;
 
 -(LDAPMessage*)entry;
 

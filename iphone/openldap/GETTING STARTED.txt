@@ -3,6 +3,10 @@ The following instructions are adapted from:
 
 * Rename ldap_config.hin to ldap_config.h
 
+ENABLE THREAD-SAFETY FOR ASYNCHRONOUS CODE
+* Add "LDAP_R_COMPILE" to "preprocessor macros not used in precompiled headers" section of build settings
+* Include openldap-2.4.33/libraries/libldap_r/thr_posix.c in the build
+
 * Modify portable.hin as follows:
 
 Settings for SASL:

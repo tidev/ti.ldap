@@ -1,37 +1,22 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "TiLdapConnectionProxy.h"
 #import "TiLdapSearchResultProxy.h"
+#import "TiLdapDelegate.h"
+#import "TiLdapBindDelegate.h"
+#import "TiLdapSearchDelegate.h"
+#import "TiLdapOptions.h"
 
 #import "TiUtils.h"
 
 #include <sasl/sasl.h>
 
 @implementation TiLdapConnectionProxy
-
-MAKE_SYSTEM_PROP(SUCCESS, LDAP_SUCCESS);
-
-MAKE_SYSTEM_PROP(OPT_PROTOCOL_VERSION, LDAP_OPT_PROTOCOL_VERSION);
-MAKE_SYSTEM_PROP(OPT_X_TLS_CACERTFILE, LDAP_OPT_X_TLS_CACERTFILE);
-
-MAKE_SYSTEM_PROP(VERSION1, LDAP_VERSION1);
-MAKE_SYSTEM_PROP(VERSION2, LDAP_VERSION2);
-MAKE_SYSTEM_PROP(VERSION3, LDAP_VERSION3);
-
-MAKE_SYSTEM_PROP(SCOPE_BASE, LDAP_SCOPE_BASE);
-MAKE_SYSTEM_PROP(SCOPE_ONELEVEL, LDAP_SCOPE_ONELEVEL);
-MAKE_SYSTEM_PROP(SCOPE_SUBTREE, LDAP_SCOPE_SUBTREE);
-MAKE_SYSTEM_PROP(SCOPE_CHILDREN, LDAP_SCOPE_CHILDREN);
-MAKE_SYSTEM_PROP(SCOPE_DEFAULT, LDAP_SCOPE_DEFAULT);
-
-MAKE_SYSTEM_STR(ALL_USER_ATTRIBUTES, LDAP_ALL_USER_ATTRIBUTES);
-MAKE_SYSTEM_STR(ALL_OPERATIONAL_ATTRIBUTES, LDAP_ALL_OPERATIONAL_ATTRIBUTES);
-MAKE_SYSTEM_STR(NO_ATTRS, LDAP_NO_ATTRS);
 
 -(id)init
 {
@@ -44,40 +29,11 @@ MAKE_SYSTEM_STR(NO_ATTRS, LDAP_NO_ATTRS);
 
 -(void)_destroy
 {
-    RELEASE_TO_NIL(successCallback);
-    RELEASE_TO_NIL(errorCallback);
-    
     if (ld) {
         ldap_unbind(ld);
-        ld = NULL;
     }
     
     [super _destroy];
-}
-
--(void)_initWithProperties:(NSDictionary*)properties
-{
-	[super _initWithProperties:properties];
-    
-    successCallback = [[properties objectForKey:@"success"] retain];
-    errorCallback = [[properties objectForKey:@"error"] retain];
-}
-
--(NSNumber*)initialize:(id)args
-{
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-
-    NSString *uri = [TiUtils stringValue:@"uri" properties:args def:@"ldap://127.0.0.1"];
-    
-    //BUGBUG -- if no scheme specified, use 'ldap'
-
-    NSLog(@"[DEBUG] LDAP initialize with uri: %@", uri);
-    int result = ldap_initialize(&ld, [uri UTF8String]);
-    if (result != LDAP_SUCCESS) {
-        NSLog(@"[ERROR] Error occurred during LDAP initialization: (%d) %s", result, ldap_err2string(result));
-    }
-    
-    return NUMINT(result);
 }
 
 -(LDAP*)ld
@@ -85,88 +41,63 @@ MAKE_SYSTEM_STR(NO_ATTRS, LDAP_NO_ATTRS);
     return ld;
 }
 
-//NOTE: The switch statement should be moved to a module method that accepts an ld so that the module can use the same
-// method to set global options
--(NSNumber*)setOption:(id)args
-{
-    enum args {
-        kArgOption = 0,
-        kArgValue,
-        kArgCount
-    };
-    
-    // Validate correct number of arguments
-    ENSURE_ARG_COUNT(args, kArgCount);
-    
-    int option = [TiUtils intValue:[args objectAtIndex:kArgOption]];
-    id inValue = [args objectAtIndex:kArgValue];
-    int result;
-    
-    switch (option) {
-        case LDAP_OPT_PROTOCOL_VERSION: {
-            int value = [TiUtils intValue:inValue];
-            NSLog(@"[DEBUG] Setting LDAP_OPT_PROTOCOL_VERSION to %d", value);
-            result = ldap_set_option(ld, option, &value);
-            NSLog(@"[DEBUG] Result: %d", result);
-            break;
-        }
-        case LDAP_OPT_X_TLS_CACERTFILE: {
-            if ([inValue isKindOfClass:[TiFile class]]) {
-                TiFile *file = (TiFile*)inValue;
-                NSString *path = [file path];
-                NSLog(@"[DEBUG] Setting LDAP_OPT_X_TLS_CACERTFILE to file: %@", path);
-                result = ldap_set_option(ld, LDAP_OPT_X_TLS_CACERTFILE, [path UTF8String]);
-                NSLog(@"[DEBUG] Result: %d", result);
-            }
-            break;
-        }
-    }
-    
-    return NUMINT(result);
-}
-
--(id)getOption:(id)arg
-{
-    ENSURE_ARG_COUNT(arg, 1);
-    
-    int option = [TiUtils intValue:[arg objectAtIndex:0]];
-    int result;
-    id outValue;
-    
-    switch (option) {
-        case LDAP_OPT_PROTOCOL_VERSION: {
-            int value;
-            result = ldap_get_option(ld, option, &value);
-            if (result == LDAP_SUCCESS) {
-                outValue = NUMINT(value);
-            }
-            break;
-        }
-    }
-    
-    if (result != LDAP_SUCCESS) {
-        NSLog(@"[ERROR] Error occurred getting LDAP option %d: (%d) %s", option, result, ldap_err2string(result));
-        return nil;
-    }
-    
-    return outValue;;
-}
-
--(NSNumber*)simpleBind:(id)args
+-(void)connect:(id)args
 {
     ENSURE_SINGLE_ARG(args, NSDictionary);
     
-    NSString *dn = [TiUtils stringValue:@"dn" properties:args];
-    NSString *passwd = [TiUtils stringValue:@"passsword" properties:args];
+    // Create the delegate for the callbacks eventhough this method
+    // is synchronous. This allows us to centrally handle the callbacks
+    TiLdapDelegate *delegate = [TiLdapDelegate delegateWithProxyAndArgs:self args:args];
+    
+    NSString *uri = [TiUtils stringValue:@"uri" properties:args def:@"ldap://127.0.0.1:389"];
+  
+    NSLog(@"[DEBUG] LDAP initialize with url: %@", uri);
 
-    NSLog(@"[DEBUG] LDAP simpleBind with dn: %@", dn);
-    int result = ldap_simple_bind_s(ld, [dn UTF8String], [passwd UTF8String]);
-    if (result != LDAP_SUCCESS) {
-        NSLog(@"[ERROR] Error occurred in simple bind: (%d) %s", result, ldap_err2string(result));
+    int result = ldap_initialize(&ld, [uri UTF8String]);
+    if (result == LDAP_SUCCESS) {
+        [TiLdapOptions processOptions:ld args:[self allProperties]];
+        NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                               uri, @"uri",
+                               nil ];
+        [delegate handleSuccess:event];
+    } else {
+        [delegate handleError:result
+                 errorMessage:[NSString stringWithUTF8String:ldap_err2string(result)]
+                       method:@"connect"];
     }
     
     return NUMINT(result);
 }
+
+-(void)simpleBind:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary)
+    
+    // Create the delegate that implements the bind and handles the callbacks
+    TiLdapBindDelegate *delegate = [TiLdapBindDelegate delegateWithProxyAndArgs:self args:args];
+    [delegate simpleBind:args];
+}
+
+-(NSNumber*)unBind:(id)args
+{
+    int result = LDAP_SUCCESS;
+    if (ld) {
+        result = ldap_unbind_ext(ld, NULL, NULL);
+        ld = NULL;
+    }
+    
+    return NUMINT(result);
+}
+
+-(void)search:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+    
+    // Create the delegate that implements the search and handles the callbacks
+    TiLdapSearchDelegate *delegate = [TiLdapSearchDelegate delegateWithProxyAndArgs:self args:args];
+    [delegate search:args];
+}
+
 
 typedef struct my_ldap_auth MyLDAPAuth;
 struct my_ldap_auth
@@ -292,71 +223,5 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
     return NUMINT(result);
 }
 
--(NSNumber*)unBind:(id)args
-{
-    int result = LDAP_SUCCESS;
-    if (ld) {
-        result = ldap_unbind_ext(ld, NULL, NULL);
-        ld = NULL;
-    }
-    
-    return NUMINT(result);
-}
-
--(id)search:(id)args
-{
-    //BUGBUG: This needs to be completely refactored to support both sync and async requests. A factory
-    // needs to be defined for creating sync and async requests for several of the ldap APIs
-    // See the Ti.Network.HTTPClient code for one possible framework
-    
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    
-    NSString *dn = [TiUtils stringValue:@"dn" properties:args];
-    int scope = [TiUtils intValue:@"scope" properties:args def:LDAP_SCOPE_DEFAULT];
-    NSString *filter = [TiUtils stringValue:@"filter" properties:args def:nil];
-    
-    NSArray *inAttrs = [args objectForKey:@"attrs"];
-    int count = [inAttrs count];
-    const char** attrs = NULL;
-    if (count > 0) {
-        attrs = malloc(sizeof(const char*) * (count+1));
-        if (attrs) {
-            for (int i=0; i<count; i++) {
-                attrs[i] = [[inAttrs objectAtIndex:i] UTF8String];
-            }
-            // Null terminate the array
-            attrs[count] = NULL;
-        }
-    }
-    
-    BOOL attrsOnly = [TiUtils boolValue:@"attrsOnly" properties:args def:0];
-    KrollCallback *callback = [args objectForKey:@"callback"];
-
-    LDAPMessage *search_result;
-    int result = ldap_search_ext_s(ld,
-                                   [dn UTF8String],
-                                   scope,
-                                   [filter UTF8String],
-                                   (char**)attrs,
-                                   attrsOnly,
-                                   NULL,
-                                   NULL,
-                                   NULL,
-                                   0,
-                                   &search_result);
-    
-    if (attrs) {
-        free(attrs);
-    }
-    
-    if (result != LDAP_SUCCESS) {
-        NSLog(@"[ERROR] Error occurred in search: (%d) %s", result, ldap_err2string(result));
-        return nil;
-    }
-
-    TiLdapSearchResultProxy *searchResult = [[[TiLdapSearchResultProxy alloc] initWithLDAPMessage:search_result callback:callback connection:self pageContext:[self pageContext]] autorelease];
-    
-    return searchResult;
-}
 
 @end

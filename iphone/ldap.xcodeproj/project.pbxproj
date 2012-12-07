@@ -28,11 +28,19 @@
 		24DE9E1211C5FE74003F90F6 /* TiLdapModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* TiLdapModuleAssets.m */; };
 		A21A063F164D98690023A19C /* TiLdapSearchResultProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A21A063D164D98690023A19C /* TiLdapSearchResultProxy.h */; };
 		A21A0640164D98690023A19C /* TiLdapSearchResultProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A21A063E164D98690023A19C /* TiLdapSearchResultProxy.m */; };
+		A273DDCC166FD0EA000F2E74 /* TiLdapDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A273DDCA166FD0EA000F2E74 /* TiLdapDelegate.h */; };
+		A273DDCD166FD0EA000F2E74 /* TiLdapDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A273DDCB166FD0EA000F2E74 /* TiLdapDelegate.m */; };
 		A2A25D7D164461CE00F5C093 /* TiLdapConnectionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */; };
 		A2A25D7E164461CE00F5C093 /* TiLdapConnectionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */; };
 		A2CEA4EB16480FA90023AF40 /* TiLdapEntryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */; };
 		A2CEA4EC16480FA90023AF40 /* TiLdapEntryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */; };
+		A2E2968C166E8C520099521E /* TiLdapOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E2968A166E8C520099521E /* TiLdapOptions.h */; };
+		A2E2968D166E8C520099521E /* TiLdapOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E2968B166E8C520099521E /* TiLdapOptions.m */; };
+		A2E3F4E816702589002B20DD /* TiLdapBindDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E3F4E616702589002B20DD /* TiLdapBindDelegate.h */; };
+		A2E3F4E916702589002B20DD /* TiLdapBindDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E3F4E716702589002B20DD /* TiLdapBindDelegate.m */; };
 		A2ECB34A1666A530002520CF /* libsasl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ECB3491666A530002520CF /* libsasl2.a */; };
+		A2EE050B1671084F00317CF4 /* TiLdapSearchDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A2EE05091671084F00317CF4 /* TiLdapSearchDelegate.h */; };
+		A2EE050C1671084F00317CF4 /* TiLdapSearchDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2EE050A1671084F00317CF4 /* TiLdapSearchDelegate.m */; };
 		A2F00AF116659EF400156CD8 /* liblber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F00AEC16659EE200156CD8 /* liblber.a */; };
 		A2F00AF216659EF400156CD8 /* libopenldap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F00AEA16659EE200156CD8 /* libopenldap.a */; };
 		AA747D9F0F9514B9006C5449 /* TiLdap_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiLdap_Prefix.pch */; };
@@ -78,11 +86,19 @@
 		24DE9E1011C5FE74003F90F6 /* TiLdapModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapModuleAssets.m; path = Classes/TiLdapModuleAssets.m; sourceTree = "<group>"; };
 		A21A063D164D98690023A19C /* TiLdapSearchResultProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapSearchResultProxy.h; path = Classes/TiLdapSearchResultProxy.h; sourceTree = "<group>"; };
 		A21A063E164D98690023A19C /* TiLdapSearchResultProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapSearchResultProxy.m; path = Classes/TiLdapSearchResultProxy.m; sourceTree = "<group>"; };
+		A273DDCA166FD0EA000F2E74 /* TiLdapDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapDelegate.h; path = Delegates/TiLdapDelegate.h; sourceTree = "<group>"; };
+		A273DDCB166FD0EA000F2E74 /* TiLdapDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapDelegate.m; path = Delegates/TiLdapDelegate.m; sourceTree = "<group>"; };
 		A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapConnectionProxy.h; path = Classes/TiLdapConnectionProxy.h; sourceTree = "<group>"; };
 		A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapConnectionProxy.m; path = Classes/TiLdapConnectionProxy.m; sourceTree = "<group>"; };
 		A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapEntryProxy.h; path = Classes/TiLdapEntryProxy.h; sourceTree = "<group>"; };
 		A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapEntryProxy.m; path = Classes/TiLdapEntryProxy.m; sourceTree = "<group>"; };
+		A2E2968A166E8C520099521E /* TiLdapOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapOptions.h; path = Classes/TiLdapOptions.h; sourceTree = "<group>"; };
+		A2E2968B166E8C520099521E /* TiLdapOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapOptions.m; path = Classes/TiLdapOptions.m; sourceTree = "<group>"; };
+		A2E3F4E616702589002B20DD /* TiLdapBindDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapBindDelegate.h; path = Delegates/TiLdapBindDelegate.h; sourceTree = "<group>"; };
+		A2E3F4E716702589002B20DD /* TiLdapBindDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapBindDelegate.m; path = Delegates/TiLdapBindDelegate.m; sourceTree = "<group>"; };
 		A2ECB3491666A530002520CF /* libsasl2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsasl2.a; path = "openldap/ports/security/cyrus-sasl/build/Release-iphoneos/libsasl2.a"; sourceTree = "<group>"; };
+		A2EE05091671084F00317CF4 /* TiLdapSearchDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapSearchDelegate.h; path = Delegates/TiLdapSearchDelegate.h; sourceTree = "<group>"; };
+		A2EE050A1671084F00317CF4 /* TiLdapSearchDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapSearchDelegate.m; path = Delegates/TiLdapSearchDelegate.m; sourceTree = "<group>"; };
 		A2F00AD916659EE000156CD8 /* openldap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openldap.xcodeproj; path = openldap/openldap.xcodeproj; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiLdap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiLdap_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -136,6 +152,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A273DDC9166FD0C7000F2E74 /* Delegates */,
 				A21A063D164D98690023A19C /* TiLdapSearchResultProxy.h */,
 				A21A063E164D98690023A19C /* TiLdapSearchResultProxy.m */,
 				24DE9E0F11C5FE74003F90F6 /* TiLdapModuleAssets.h */,
@@ -146,6 +163,8 @@
 				A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */,
 				A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */,
 				A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */,
+				A2E2968A166E8C520099521E /* TiLdapOptions.h */,
+				A2E2968B166E8C520099521E /* TiLdapOptions.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -165,6 +184,19 @@
 				A2F00AD916659EE000156CD8 /* openldap.xcodeproj */,
 			);
 			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		A273DDC9166FD0C7000F2E74 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				A273DDCA166FD0EA000F2E74 /* TiLdapDelegate.h */,
+				A273DDCB166FD0EA000F2E74 /* TiLdapDelegate.m */,
+				A2E3F4E616702589002B20DD /* TiLdapBindDelegate.h */,
+				A2E3F4E716702589002B20DD /* TiLdapBindDelegate.m */,
+				A2EE05091671084F00317CF4 /* TiLdapSearchDelegate.h */,
+				A2EE050A1671084F00317CF4 /* TiLdapSearchDelegate.m */,
+			);
+			name = Delegates;
 			sourceTree = "<group>";
 		};
 		A2F00ADA16659EE000156CD8 /* Products */ = {
@@ -189,6 +221,10 @@
 				A2A25D7D164461CE00F5C093 /* TiLdapConnectionProxy.h in Headers */,
 				A2CEA4EB16480FA90023AF40 /* TiLdapEntryProxy.h in Headers */,
 				A21A063F164D98690023A19C /* TiLdapSearchResultProxy.h in Headers */,
+				A2E2968C166E8C520099521E /* TiLdapOptions.h in Headers */,
+				A273DDCC166FD0EA000F2E74 /* TiLdapDelegate.h in Headers */,
+				A2E3F4E816702589002B20DD /* TiLdapBindDelegate.h in Headers */,
+				A2EE050B1671084F00317CF4 /* TiLdapSearchDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +324,10 @@
 				A2A25D7E164461CE00F5C093 /* TiLdapConnectionProxy.m in Sources */,
 				A2CEA4EC16480FA90023AF40 /* TiLdapEntryProxy.m in Sources */,
 				A21A0640164D98690023A19C /* TiLdapSearchResultProxy.m in Sources */,
+				A2E2968D166E8C520099521E /* TiLdapOptions.m in Sources */,
+				A273DDCD166FD0EA000F2E74 /* TiLdapDelegate.m in Sources */,
+				A2E3F4E916702589002B20DD /* TiLdapBindDelegate.m in Sources */,
+				A2EE050C1671084F00317CF4 /* TiLdapSearchDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
