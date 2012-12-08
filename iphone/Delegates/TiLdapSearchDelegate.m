@@ -17,13 +17,13 @@
     return [[[self alloc] initWithProxy:connection args:args] autorelease];
 }
 
--(void)startPollingForResult
+-(void)waitForResultInThread
 {
     [self retain];
-    [NSThread detachNewThreadSelector:@selector(pollForResult) toTarget:self withObject:nil];
+    [NSThread detachNewThreadSelector:@selector(waitForResult) toTarget:self withObject:nil];
 }
 
--(void)pollForResult
+-(void)waitForResult
 {
     LDAPMessage *message = NULL;
     int err = -1;
@@ -69,6 +69,14 @@
 
 -(void)search:(NSDictionary*)args
 {
+    // Verify that we have a valid connection
+    if ((_connection == nil) || ([_connection isValid] == NO)) {
+        [self handleError:-1
+             errorMessage:@"[ERROR] Connection is invalid."
+                   method:@"search"];
+        return;
+    }
+    
     BOOL async = [TiUtils boolValue:@"async" properties:args def:NO];
     NSString *base = [TiUtils stringValue:@"base" properties:args];
     int scope = [TiUtils intValue:@"scope" properties:args def:LDAP_SCOPE_DEFAULT];
@@ -134,9 +142,11 @@
     
     if (attrs) {
         free(attrs);
+        attrs = NULL;
     }
     if (timeVal) {
         free(timeVal);
+        timeVal = NULL;
     }
     
     // If we have a messageId then this is a valid asynchronouse request and we need to start
@@ -144,7 +154,7 @@
     // result proxy. Otherwise, an error occurred and we need to report that and clean up.
     
     if (_messageId >= 0) {
-        [self startPollingForResult];
+        [self waitForResultInThread];
     } else if (result == LDAP_SUCCESS) {
         TiLdapSearchResultProxy *searchResult = [[[TiLdapSearchResultProxy alloc] initWithLDAPMessage:search_result connection:_connection] autorelease];
         [self handleSuccess:searchResult];

@@ -6,6 +6,9 @@
 //
 //
 
+//BUGBUG: Change this to a AsyncRequestProxy that combines the delegate and searchResult, etc. Return this
+//proxy for async requests and add the 'abandon' method so that it can be killed if necessary
+
 #import <Foundation/Foundation.h>
 #import "TiLdapConnectionProxy.h"
 

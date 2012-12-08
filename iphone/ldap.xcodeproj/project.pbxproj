@@ -32,6 +32,8 @@
 		A273DDCD166FD0EA000F2E74 /* TiLdapDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A273DDCB166FD0EA000F2E74 /* TiLdapDelegate.m */; };
 		A2A25D7D164461CE00F5C093 /* TiLdapConnectionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */; };
 		A2A25D7E164461CE00F5C093 /* TiLdapConnectionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */; };
+		A2C8AFF916717F6A00A2AE00 /* TiLdapSaslBindDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A2C8AFF716717F6A00A2AE00 /* TiLdapSaslBindDelegate.h */; };
+		A2C8AFFA16717F6A00A2AE00 /* TiLdapSaslBindDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C8AFF816717F6A00A2AE00 /* TiLdapSaslBindDelegate.m */; };
 		A2CEA4EB16480FA90023AF40 /* TiLdapEntryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */; };
 		A2CEA4EC16480FA90023AF40 /* TiLdapEntryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */; };
 		A2E2968C166E8C520099521E /* TiLdapOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E2968A166E8C520099521E /* TiLdapOptions.h */; };
@@ -90,6 +92,8 @@
 		A273DDCB166FD0EA000F2E74 /* TiLdapDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapDelegate.m; path = Delegates/TiLdapDelegate.m; sourceTree = "<group>"; };
 		A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapConnectionProxy.h; path = Classes/TiLdapConnectionProxy.h; sourceTree = "<group>"; };
 		A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapConnectionProxy.m; path = Classes/TiLdapConnectionProxy.m; sourceTree = "<group>"; };
+		A2C8AFF716717F6A00A2AE00 /* TiLdapSaslBindDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapSaslBindDelegate.h; path = Delegates/TiLdapSaslBindDelegate.h; sourceTree = "<group>"; };
+		A2C8AFF816717F6A00A2AE00 /* TiLdapSaslBindDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapSaslBindDelegate.m; path = Delegates/TiLdapSaslBindDelegate.m; sourceTree = "<group>"; };
 		A2CEA4E916480FA90023AF40 /* TiLdapEntryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapEntryProxy.h; path = Classes/TiLdapEntryProxy.h; sourceTree = "<group>"; };
 		A2CEA4EA16480FA90023AF40 /* TiLdapEntryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapEntryProxy.m; path = Classes/TiLdapEntryProxy.m; sourceTree = "<group>"; };
 		A2E2968A166E8C520099521E /* TiLdapOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapOptions.h; path = Classes/TiLdapOptions.h; sourceTree = "<group>"; };
@@ -195,6 +199,8 @@
 				A2E3F4E716702589002B20DD /* TiLdapBindDelegate.m */,
 				A2EE05091671084F00317CF4 /* TiLdapSearchDelegate.h */,
 				A2EE050A1671084F00317CF4 /* TiLdapSearchDelegate.m */,
+				A2C8AFF716717F6A00A2AE00 /* TiLdapSaslBindDelegate.h */,
+				A2C8AFF816717F6A00A2AE00 /* TiLdapSaslBindDelegate.m */,
 			);
 			name = Delegates;
 			sourceTree = "<group>";
@@ -225,6 +231,7 @@
 				A273DDCC166FD0EA000F2E74 /* TiLdapDelegate.h in Headers */,
 				A2E3F4E816702589002B20DD /* TiLdapBindDelegate.h in Headers */,
 				A2EE050B1671084F00317CF4 /* TiLdapSearchDelegate.h in Headers */,
+				A2C8AFF916717F6A00A2AE00 /* TiLdapSaslBindDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +335,7 @@
 				A273DDCD166FD0EA000F2E74 /* TiLdapDelegate.m in Sources */,
 				A2E3F4E916702589002B20DD /* TiLdapBindDelegate.m in Sources */,
 				A2EE050C1671084F00317CF4 /* TiLdapSearchDelegate.m in Sources */,
+				A2C8AFFA16717F6A00A2AE00 /* TiLdapSaslBindDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

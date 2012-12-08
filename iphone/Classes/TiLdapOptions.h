@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TiLdapConnectionProxy.h"
 
 #define LDAP_DEPRECATED 1
 #import "ldap.h"
@@ -14,7 +15,7 @@
 @interface TiLdapOptions : NSObject {
 }
 
-+(void)processOptions:(LDAP*)ld args:(NSDictionary*)args;
-+(int)set:(LDAP*)ld option:(int)option value:(id)optionValue;
++(void)processOptions:(TiLdapConnectionProxy*)connection args:(NSDictionary*)args;
++(int)set:(TiLdapConnectionProxy*)connection option:(int)option value:(id)optionValue;
 
 @end

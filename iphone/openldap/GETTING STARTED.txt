@@ -54,3 +54,15 @@ Settings for OpenSSL:
 //***************************************
 Remove references to armv6 from xcodeproject files for building with XCode 4.x and iOS SDK 5.x+
 //***************************************
+
+
+
+================
+
+Download LDAPManager or Apache Directory Studio
+
+Simple authentication set up:
+
+ip: 50.18.181.104
+dn = cn=admin,dc=appcelerator,dc=com
+password = s3c4et99

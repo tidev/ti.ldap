@@ -29,12 +29,13 @@
 -(void)simpleBind:(NSDictionary*)args
 {
     NSString *dn = [TiUtils stringValue:@"dn" properties:args def:nil];
-    NSString *passwd = [TiUtils stringValue:@"passsword" properties:args def:nil];
+    NSString *passwd = [TiUtils stringValue:@"password" properties:args def:nil];
     
     NSLog(@"[DEBUG] LDAP simpleBind with dn: %@", dn);
     int result = ldap_simple_bind_s(_connection.ld, [dn UTF8String], [passwd UTF8String]);
     
     if (result == LDAP_SUCCESS) {
+        _connection.bound = YES;
         [self handleSuccess:nil];
     } else {
         [self handleError:result

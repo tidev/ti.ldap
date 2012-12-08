@@ -11,9 +11,14 @@
 #import "ldap.h"
 
 @interface TiLdapConnectionProxy : TiProxy {
-    LDAP        *ld;
+@private
+    LDAP    *_ld;
 }
 
 -(LDAP*)ld;
+-(BOOL)isValid;
+
+@property(nonatomic,readwrite) BOOL useTLS;
+@property(nonatomic,readwrite) BOOL bound;
 
 @end
