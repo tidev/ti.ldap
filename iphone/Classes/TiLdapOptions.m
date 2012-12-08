@@ -20,16 +20,18 @@ static NSDictionary *keyMap = nil;
         keyMap = [NSDictionary dictionaryWithObjectsAndKeys:
                   [NSNumber numberWithInt:LDAP_OPT_PROTOCOL_VERSION], @"protocolVersion",
                   [NSNumber numberWithInt:LDAP_OPT_CONNECT_ASYNC], @"connectAsync",
-                  [NSNumber numberWithInt:LDAP_OPT_DEBUG_LEVEL], @"debugLevel",
-                  [NSNumber numberWithInt:LDAP_OPT_NETWORK_TIMEOUT], @"networkTimeout",
-                  [NSNumber numberWithInt:LDAP_OPT_SIZELIMIT], @"sizeLimit",
-                  [NSNumber numberWithInt:LDAP_OPT_TIMEOUT], @"timeout",
-                  [NSNumber numberWithInt:LDAP_OPT_TIMELIMIT], @"timeLimit",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_CACERTDIR], @"tlsCACertDir",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_CACERTFILE], @"tlsCACertFile",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_CERTFILE], @"tlsCertFile",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_KEYFILE], @"tlsKeyFile",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_REQUIRE_CERT], @"tlsRequireCert",
+                  [NSNumber numberWithInt:LDAP_OPT_DEBUG_LEVEL], @"debugLevel",
+                  [NSNumber numberWithInt:LDAP_OPT_SIZELIMIT], @"sizeLimit",
+                  
+                  [NSNumber numberWithInt:LDAP_OPT_NETWORK_TIMEOUT], @"networkTimeout",
+                  [NSNumber numberWithInt:LDAP_OPT_TIMEOUT], @"timeout",
+                  [NSNumber numberWithInt:LDAP_OPT_TIMELIMIT], @"timeLimit",
+
                   nil];
         [keyMap retain];
     }
@@ -56,6 +58,9 @@ static NSDictionary *keyMap = nil;
     int result = LDAP_UNDEFINED_TYPE;
     
     switch (option) {
+        case LDAP_OPT_DEBUG_LEVEL:
+        case LDAP_OPT_SIZELIMIT:
+        case LDAP_OPT_TIMELIMIT:
         case LDAP_OPT_PROTOCOL_VERSION:
         {
             int value = [TiUtils intValue:optionValue];
