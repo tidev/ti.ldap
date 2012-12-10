@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -10,18 +10,19 @@
 
 @implementation TiLdapSearchResultProxy
 
--(id)initWithLDAPMessage:(LDAPMessage *)result connection:(TiLdapConnectionProxy *)connection {
+-(id)initWithLDAPMessage:(LDAPMessage*)searchResult connection:(TiLdapConnectionProxy*)connection
+{
     if (self = [super _initWithPageContext:[connection pageContext]]) {
+        _searchResult = searchResult;
         _connection = [connection retain];
-        _searchResult = result;
     }
     
     return self;
 }
 
-+(id)resultWithLDAPMessage:(LDAPMessage*)result connection:(TiLdapConnectionProxy*)connection
++(TiLdapSearchResultProxy*)searchResultWithLDAPMessage:(LDAPMessage*)searchResult connection:(TiLdapConnectionProxy*)connection
 {
-    return [[[self alloc] initWithLDAPMessage:result connection:connection] autorelease];
+    return [[[self alloc] initWithLDAPMessage:searchResult connection:connection] autorelease];
 }
 
 -(void)_destroy
@@ -34,6 +35,11 @@
     }
     
 	[super _destroy];
+}
+
+-(TiLdapConnectionProxy*)connection
+{
+    return _connection;
 }
 
 -(NSNumber*)countEntries:(id)args
@@ -54,7 +60,7 @@
         return nil;
     }
     
-    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:entry connection:_connection];
+    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:entry searchResult:self];
     
     return entryProxy;
 }
@@ -69,7 +75,7 @@
         return nil;
     }
     
-    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:entry connection:_connection];
+    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:entry searchResult:self];
     
     return entryProxy;
 }

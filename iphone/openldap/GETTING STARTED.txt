@@ -5,6 +5,7 @@ The following instructions are adapted from:
 
 ENABLE THREAD-SAFETY FOR ASYNCHRONOUS CODE
 * Add "LDAP_R_COMPILE" to "preprocessor macros not used in precompiled headers" section of build settings
+* Remove use of precompiled headers by clearing the openldap-Prefix.pch file from the settings (causes issue when building release)
 * Include openldap-2.4.33/libraries/libldap_r/thr_posix.c in the build
 
 * Modify portable.hin as follows:

@@ -1,16 +1,14 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "TiLdapConnectionProxy.h"
-#import "TiLdapSearchResultProxy.h"
-#import "TiLdapDelegate.h"
-#import "TiLdapBindDelegate.h"
-#import "TiLdapSaslBindDelegate.h"
-#import "TiLdapSearchDelegate.h"
+#import "TiLdapSimpleBindRequestProxy.h"
+#import "TiLdapSaslBindRequestProxy.h"
+#import "TiLdapSearchRequestProxy.h"
 #import "TiLdapOptions.h"
 
 #import "TiUtils.h"
@@ -44,7 +42,7 @@
     return _ld;
 }
 
--(BOOL)isValid
+-(BOOL)isBound
 {
     return (_ld && bound);
 }
@@ -52,10 +50,6 @@
 -(void)connect:(id)args
 {
     ENSURE_SINGLE_ARG(args, NSDictionary);
-    
-    // Create the delegate for the callbacks eventhough this method
-    // is synchronous. This allows us to centrally handle the callbacks
-    TiLdapDelegate *delegate = [TiLdapDelegate delegateWithProxyAndArgs:self args:args];
     
     NSString *uri = [TiUtils stringValue:@"uri" properties:args def:@"ldap://127.0.0.1:389"];
   
@@ -68,26 +62,50 @@
         ldap_set_option(_ld, LDAP_OPT_PROTOCOL_VERSION, &protocolVersion);
         
         [TiLdapOptions processOptions:self args:[self allProperties]];
-        NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                               uri, @"uri",
-                               nil ];
-        [delegate handleSuccess:event];
+        
+        KrollCallback *successCallback = [args objectForKey:@"success"];
+        if (successCallback) {
+            NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   @"connect", @"method",
+                                   uri, @"uri",
+                                   nil];
+            [self _fireEventToListener:@"success" withObject:event listener:successCallback thisObject:nil];
+        }
     } else {
-        [delegate handleError:result
-                 errorMessage:[NSString stringWithUTF8String:ldap_err2string(result)]
-                       method:@"connect"];
+        KrollCallback *errorCallback = [args objectForKey:@"error"];
+        if (errorCallback) {
+            NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   @"connect", @"method",
+                                   NUMINT(result), @"error",
+                                   [NSString stringWithUTF8String:ldap_err2string(result)], @"message",
+                                   nil];
+            [self _fireEventToListener:@"error" withObject:event listener:errorCallback thisObject:nil];
+        }
     }
     
     return NUMINT(result);
 }
 
--(void)simpleBind:(id)args
+-(TiLdapRequestProxy*)simpleBind:(id)args
 {
     ENSURE_SINGLE_ARG(args, NSDictionary)
     
-    // Create the delegate that implements the bind and handles the callbacks
-    TiLdapBindDelegate *delegate = [TiLdapBindDelegate delegateWithProxyAndArgs:self args:args];
-    [delegate simpleBind:args];
+    // Create the request that implements the bind and handles the callbacks
+    TiLdapSimpleBindRequestProxy *request = [TiLdapSimpleBindRequestProxy requestWithProxyAndArgs:self args:args];
+    [request sendRequest:args];
+    
+    return request;
+}
+
+-(TiLdapRequestProxy*)saslBind:(id)args
+{
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+    
+    // Create the request that implements the bind and handles the callbacks
+    TiLdapSaslBindRequestProxy *request = [TiLdapSaslBindRequestProxy requestWithProxyAndArgs:self args:args];
+    [request sendRequest:args];
+    
+    return request;
 }
 
 -(void)unBind:(id)args
@@ -98,24 +116,15 @@
     }
 }
 
-//BUGBUG: See comment in TiLdapDelegate.h
-
--(void)search:(id)args
+-(TiLdapRequestProxy*)search:(id)args
 {
     ENSURE_SINGLE_ARG(args, NSDictionary);
 
     // Create the delegate that implements the search and handles the callbacks
-    TiLdapSearchDelegate *delegate = [TiLdapSearchDelegate delegateWithProxyAndArgs:self args:args];
-    [delegate search:args];
-}
-
--(void)saslBind:(id)args
-{
-    ENSURE_SINGLE_ARG(args, NSDictionary);
+    TiLdapSearchRequestProxy *request = [TiLdapSearchRequestProxy requestWithProxyAndArgs:self args:args];
+    [request sendRequest:args];
     
-    // Create the delegate that implements the bind and handles the callbacks
-    TiLdapSaslBindDelegate *delegate = [TiLdapSaslBindDelegate delegateWithProxyAndArgs:self args:args];
-    [delegate saslBind:args];
+    return request;
 }
 
 @end

@@ -4743,11 +4743,10 @@
 			buildSettings = {
 				DSTROOT = /tmp/openldap.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "openldap-Prefix.pch";
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = LDAP_R_COMPILE;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "DEBUG=1";
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
-				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = LDAP_R_COMPILE;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = LDAP_R_COMPILE;
 				HEADER_SEARCH_PATHS = (
 					"openldap-2.4.33/include",
 					"ports/security/cyrus-sasl/cyrus-sasl/include",
@@ -4764,9 +4763,9 @@
 			buildSettings = {
 				DSTROOT = /tmp/openldap.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "openldap-Prefix.pch";
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = LDAP_R_COMPILE;
-				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = LDAP_R_COMPILE;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = LDAP_R_COMPILE;
 				HEADER_SEARCH_PATHS = (
 					"openldap-2.4.33/include",
 					"ports/security/cyrus-sasl/cyrus-sasl/include",

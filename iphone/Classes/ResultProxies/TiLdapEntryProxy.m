@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -11,25 +11,25 @@
 
 @implementation TiLdapEntryProxy
 
--(id)initWithLDAPMessage:(LDAPMessage*)entry connection:(TiLdapConnectionProxy*)connection
+-(id)initWithLDAPMessage:(LDAPMessage*)entry searchResult:(TiLdapSearchResultProxy*)searchResult
 {
-    if (self = [super _initWithPageContext:[connection pageContext]]) {
+    if (self = [super _initWithPageContext:[searchResult pageContext]]) {
         _entry = entry;
-        _connection = [connection retain];
+        _searchResult = [searchResult retain];
         _ber = NULL;
     }
     
     return self;
 }
 
-+(id)entryWithLDAPMessage:(LDAPMessage*)result connection:(TiLdapConnectionProxy*)connection
++(id)entryWithLDAPMessage:(LDAPMessage*)result searchResult:(TiLdapSearchResultProxy*)searchResult
 {
-    return [[[self alloc] initWithLDAPMessage:result connection:connection] autorelease];
+    return [[[self alloc] initWithLDAPMessage:result searchResult:searchResult] autorelease];
 }
 
 -(void)_destroy
 {
-    RELEASE_TO_NIL(_connection);
+    RELEASE_TO_NIL(_searchResult);
     if (_ber != NULL) {
         ber_free(_ber, 0);
         _ber = NULL;
@@ -47,7 +47,7 @@
 {
     NSString *result = nil;
     if (_entry) {
-        char *dn = ldap_get_dn(_connection.ld, _entry);
+        char *dn = ldap_get_dn(_searchResult.connection.ld, _entry);
         if (dn != NULL) {
             result = [NSString stringWithUTF8String:dn];
             ldap_memfree(dn);
@@ -68,7 +68,7 @@
         _ber = NULL;
     }
     
-    char *attribute = ldap_first_attribute(_connection.ld, _entry, &_ber);
+    char *attribute = ldap_first_attribute(_searchResult.connection.ld, _entry, &_ber);
     if (attribute != NULL) {
         result = [NSString stringWithUTF8String:attribute];
         ldap_memfree(attribute);
@@ -84,7 +84,7 @@
 {
     NSString *result = nil;
     
-    char *attribute = ldap_next_attribute(_connection.ld, _entry, _ber);
+    char *attribute = ldap_next_attribute(_searchResult.connection.ld, _entry, _ber);
     if (attribute != NULL) {
         result = [NSString stringWithUTF8String:attribute];
         ldap_memfree(attribute);
@@ -101,7 +101,7 @@
     
     NSMutableArray *result = nil;
     
-    char **vals = ldap_get_values(_connection.ld, _entry, [arg UTF8String]);
+    char **vals = ldap_get_values(_searchResult.connection.ld, _entry, [arg UTF8String]);
     if (vals) {
         int count = ldap_count_values(vals);
         result = [[[NSMutableArray alloc] initWithCapacity:count] autorelease];
@@ -125,7 +125,7 @@
     
     NSMutableArray *result = nil;
     
-    struct berval** vals = ldap_get_values_len(_connection.ld, _entry, [arg UTF8String]);
+    struct berval** vals = ldap_get_values_len(_searchResult.connection.ld, _entry, [arg UTF8String]);
     if (vals) {
         int count = ldap_count_values_len(vals);
         result = [[[NSMutableArray alloc] initWithCapacity:count] autorelease];
