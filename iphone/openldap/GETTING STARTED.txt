@@ -1,0 +1,69 @@
+The following instructions are adapted from:
+  http://www.ibm.com/developerworks/aix/library/au-iphoneapp/index.html
+
+* Rename ldap_config.hin to ldap_config.h
+
+ENABLE THREAD-SAFETY FOR ASYNCHRONOUS CODE
+* Add "LDAP_R_COMPILE" to "preprocessor macros not used in precompiled headers" section of build settings
+* Remove use of precompiled headers by clearing the openldap-Prefix.pch file from the settings (causes issue when building release)
+* Include openldap-2.4.33/libraries/libldap_r/thr_posix.c in the build
+
+* Modify portable.hin as follows:
+
+Settings for SASL:
+
+/* Define to 1 if you have the <sasl.h> header file. */
+//BUGBUG#undef HAVE_SASL_H
+#define HAVE_SASL_H 1
+
+/* Define to 1 if you have the <sasl/sasl.h> header file. */
+//BUGBUG#undef HAVE_SASL_SASL_H
+
+Settings for OpenSSL:
+
+/* define if you have OpenSSL */
+//BUGBUG#undef HAVE_OPENSSL
+#define HAVE_OPENSSL 1
+
+/* Define to 1 if you have the <openssl/bn.h> header file. */
+//BUGBUG#undef HAVE_OPENSSL_BN_H
+#define HAVE_OPENSSL_BN_H 1
+
+/* define if you have OpenSSL with CRL checking capability */
+//BUGBUG#undef HAVE_OPENSSL_CRL
+#define HAVE_OPENSSL_CRL 1
+
+/* Define to 1 if you have the <openssl/crypto.h> header file. */
+//BUGBUG#undef HAVE_OPENSSL_CRYPTO_H
+#define HAVE_OPENSSL_CRYPTO_H 1
+
+/* Define to 1 if you have the <openssl/ssl.h> header file. */
+//BUGBUG#undef HAVE_OPENSSL_SSL_H
+#define HAVE_OPENSSL_SSL_H 1
+
+
+* Run Configure to generate portable.h
+
+./configure
+  CC=/Applications/XCode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc
+  LD=/Applications/XCode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ld
+  --host=arm-apple-darwin
+  --disable-slapd
+  --with-cyrus-sasl
+  --with-tls
+
+//***************************************
+Remove references to armv6 from xcodeproject files for building with XCode 4.x and iOS SDK 5.x+
+//***************************************
+
+
+
+================
+
+Download LDAPManager or Apache Directory Studio
+
+Simple authentication set up:
+
+ip: 50.18.181.104
+dn = cn=admin,dc=appcelerator,dc=com
+password = s3c4et99
