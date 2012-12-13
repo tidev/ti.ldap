@@ -21,6 +21,7 @@ import java.util.List;
 
 import ti.ldap.ConnectionProxy;
 import ti.ldap.LdapModule;
+import ti.ldap.ResultProxies.SearchResultProxy;
 
 @Kroll.proxy
 public class SearchRequestProxy extends RequestProxy {
@@ -55,6 +56,7 @@ public class SearchRequestProxy extends RequestProxy {
 		@Override
 		public void searchResultReceived(AsyncRequestID requestID, SearchResult searchResult) 
 		{
+			// The search request has finally finished.
 			final ResultCode rc = searchResult.getResultCode();
 			if (rc != ResultCode.SUCCESS) {
 				handleError(searchResult);
@@ -87,15 +89,9 @@ public class SearchRequestProxy extends RequestProxy {
 	@Override
 	public void handleSuccess(Object result)
 	{
-		Log.i(LCAT, ">>> handleSuccess for Search <<<");
-		
-		SearchResult searchResult = (SearchResult)_ldapResult;
+		SearchResultProxy searchResultProxy = new SearchResultProxy((SearchResult)_ldapResult);
 
-        for (SearchResultEntry entry : searchResult.getSearchEntries())
-        {
-            Log.w(LCAT,"Search Result: " + entry.toString());
-        }
-		super.handleSuccess(null);
+		super.handleSuccess(searchResultProxy);
 	}
 	
 	@Override
@@ -107,7 +103,9 @@ public class SearchRequestProxy extends RequestProxy {
 		
 		String base = args.optString("base", "");
 		int scope = args.optInt("scope", LdapModule.SCOPE_DEFAULT);
-		String filter = args.optString("filter", "*");
+		
+		// Use the same default value that openLDAP uses when a filter is not provided
+		String filter = args.optString("filter", "(objectClass=*)");
 
         Object obj = args.get("attrs");
         ArrayList<String> attrs = null;
