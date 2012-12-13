@@ -1,3 +1,11 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ *
+ */
+
 package ti.ldap.RequestProxies;
 
 import org.appcelerator.kroll.KrollDict;
@@ -30,12 +38,6 @@ public class SearchRequestProxy extends RequestProxy {
 	
 	public SearchRequestProxy(ConnectionProxy connection, KrollDict args) {
 		super("search", connection, args);
-	}
-	
-	@Override
-	public void release()
-	{
-		super.release();
 	}
 	
 	private class localAsyncSearchResultListener implements AsyncSearchResultListener
@@ -139,7 +141,7 @@ public class SearchRequestProxy extends RequestProxy {
 	
 	        if (async) {
 	        	_ldapResult = null;
-	        	_requestId = _connection.getLd().asyncSearch(searchRequest);
+	        	_asyncRequestId = _connection.getLd().asyncSearch(searchRequest);
 	        } else {
 	        	_ldapResult = _connection.getLd().search(searchRequest);
 	        }

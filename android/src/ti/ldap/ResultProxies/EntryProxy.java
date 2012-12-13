@@ -1,3 +1,11 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ *
+ */
+
 package ti.ldap.ResultProxies;
 
 import java.util.Iterator;
@@ -8,7 +16,6 @@ import org.appcelerator.titanium.TiBlob;
 
 import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.Attribute;
-
 
 @Kroll.proxy
 public class EntryProxy extends KrollProxy {

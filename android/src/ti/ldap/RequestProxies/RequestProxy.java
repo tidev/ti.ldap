@@ -1,3 +1,11 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ *
+ */
+
 package ti.ldap.RequestProxies;
 
 import java.util.HashMap;
@@ -25,12 +33,11 @@ public class RequestProxy extends KrollProxy {
 	protected final KrollFunction _successCallback;
 	protected final KrollFunction _errorCallback;
 	protected final ConnectionProxy _connection;
-	protected AsyncRequestID _requestId = null;
+	protected AsyncRequestID _asyncRequestId = null;
 	protected LDAPResult _ldapResult;
 	
 	public RequestProxy(final String method, final ConnectionProxy connection, final KrollDict args) {
 		super();
-		
 		_method = method;
 		_connection = connection;
 		_successCallback = (KrollFunction)args.get("success");
@@ -101,10 +108,10 @@ public class RequestProxy extends KrollProxy {
 		// Determine if this is a synchronous or asynchronous request
 		Boolean async = args.optBoolean("async", false);
 		
-		_requestId = null;
+		_asyncRequestId = null;
 		LDAPResult result = execute(args, async);
 		
-		if (async && (_requestId != null)) {
+		if (async && (_asyncRequestId != null)) {
 			Log.i(LCAT, "Successfully initiated asynchronous request");
 		} else if (result == null) {
 			handleError(-1, "Unknown error occurred");
@@ -118,10 +125,10 @@ public class RequestProxy extends KrollProxy {
 	@Kroll.method
 	public void abandon()
 	{
-		if (_requestId != null) {
+		if (_asyncRequestId != null) {
 			try {
-			_connection.getLd().abandon(_requestId);
-			_requestId = null;
+			_connection.getLd().abandon(_asyncRequestId);
+			_asyncRequestId = null;
 			} catch (LDAPException e) {
 	            Log.e(LCAT, "Error occurred in abandon: " + e.toString());
 			}
