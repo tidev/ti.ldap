@@ -33,7 +33,7 @@
 -(int)execute:(NSDictionary*)args async:(BOOL)async
 {
     if (![self isConnectionBound]) {
-        return;
+        return -1;
     }
     
     NSString *base = [TiUtils stringValue:@"base" properties:args];
@@ -56,6 +56,8 @@
     }
     
     BOOL attrsOnly = [TiUtils boolValue:@"attrsOnly" properties:args def:0];
+
+    //Timeout is specified in ms
     id timeout = [args objectForKey:@"timeout"];
     struct timeval *timeVal = NULL;
     if (timeout) {
