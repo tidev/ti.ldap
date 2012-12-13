@@ -17,7 +17,6 @@ static NSDictionary *keyMap = nil;
 {
     if (self == [TiLdapOptions class]) {
         keyMap = [NSDictionary dictionaryWithObjectsAndKeys:
-                  [NSNumber numberWithInt:LDAP_OPT_PROTOCOL_VERSION], @"protocolVersion",
                   [NSNumber numberWithInt:LDAP_OPT_CONNECT_ASYNC], @"connectAsync",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_CACERTDIR], @"tlsCACertDir",
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_CACERTFILE], @"tlsCACertFile",
@@ -26,10 +25,7 @@ static NSDictionary *keyMap = nil;
                   [NSNumber numberWithInt:LDAP_OPT_X_TLS_REQUIRE_CERT], @"tlsRequireCert",
                   [NSNumber numberWithInt:LDAP_OPT_DEBUG_LEVEL], @"debugLevel",
                   [NSNumber numberWithInt:LDAP_OPT_SIZELIMIT], @"sizeLimit",
-                  
-                  [NSNumber numberWithInt:LDAP_OPT_NETWORK_TIMEOUT], @"networkTimeout",
-                  [NSNumber numberWithInt:LDAP_OPT_TIMEOUT], @"timeout",
-                  [NSNumber numberWithInt:LDAP_OPT_TIMELIMIT], @"timeLimit",
+                  [NSNumber numberWithInt:LDAP_OPT_TIMEOUT], @"timeout"
 
                   nil];
         [keyMap retain];
@@ -59,11 +55,8 @@ static NSDictionary *keyMap = nil;
     switch (option) {
         case LDAP_OPT_DEBUG_LEVEL:
         case LDAP_OPT_SIZELIMIT:
-        case LDAP_OPT_TIMELIMIT:
-        case LDAP_OPT_PROTOCOL_VERSION:
         {
             int value = [TiUtils intValue:optionValue];
-            NSLog(@"[DEBUG] Setting LDAP_OPT_PROTOCOL_VERSION to %d", value);
             result = ldap_set_option(connection.ld, option, &value);
             break;
         }
@@ -71,20 +64,24 @@ static NSDictionary *keyMap = nil;
         case LDAP_OPT_CONNECT_ASYNC:
         {
             int value = (int)[TiUtils boolValue:optionValue];
-            NSLog(@"[DEBUG] Setting LDAP_OPT_CONNECT_ASYNC to %d", value);
             result = ldap_set_option(connection.ld, option, &value);
             break;
         }
-        case LDAP_OPT_NETWORK_TIMEOUT:
         case LDAP_OPT_TIMEOUT:
         {
-            struct timeval *timeVal = NULL;
-            if (optionValue) {
-                struct timeval timeVal;
-                timeVal.tv_sec = [TiUtils intValue:@"sec" properties:optionValue def:1];
-                timeVal.tv_usec = [TiUtils intValue:@"usec" properties:optionValue def:0];
-                NSLog(@"[DEBUG] Setting LDAP_OPT_TIMEOUT to %d, %d", timeVal.tv_sec, timeVal.tv_usec);
-                result = ldap_set_option(connection.ld, option, &timeVal);
+            // Timeout is specified in milliseconds
+            int value = [TiUtils intValue:optionValue];
+            struct timeval timeVal;
+            if (value == -1) {
+                timeVal.tv_sec = -1;
+                timeVal.tv_usec = -1;
+            } else {
+                timeVal.tv_sec = value / 1000;
+                timeVal.tv_usec = (value % 1000) * 1000;
+            }
+            result = ldap_set_option(connection.ld, LDAP_OPT_NETWORK_TIMEOUT, &timeVal);
+            if (result == LDAP_SUCCESS) {
+                result = ldap_set_option(connectino.ld, LDAP_OPT_TIMEOUT, &timeVal);
             }
             break;
         }
