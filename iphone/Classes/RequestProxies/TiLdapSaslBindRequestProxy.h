@@ -11,8 +11,8 @@ typedef struct my_ldap_auth MyLDAPAuth;
 struct my_ldap_auth
 {
     char * mech;
-    char * authuser;
-    char * user;
+    char * authorizationId;
+    char * authenticationId;
     char * realm;
     char * passwd;
 };

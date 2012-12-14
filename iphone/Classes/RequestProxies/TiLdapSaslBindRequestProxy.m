@@ -22,17 +22,17 @@
     if (_auth.mech) {
         free(_auth.mech);
     }
-    if (_auth.authuser) {
-        free(_auth.authuser);
+    if (_auth.authenticationId) {
+        free(_auth.authenticationId);
+    }
+    if (_auth.authorizationId) {
+        free(_auth.authorizationId);
     }
     if (_auth.passwd) {
         free(_auth.passwd);
     }
     if (_auth.realm) {
         free(_auth.realm);
-    }
-    if (_auth.user) {
-        free(_auth.user);
     }
     
     [super _destroy];
@@ -71,8 +71,8 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_AUTHNAME:
-                NSLog(@"         processing SASL_CB_AUTHNAME (%s)", ldap_inst->authuser ? ldap_inst->authuser : "");
-                interact->result = ldap_inst->authuser ? ldap_inst->authuser : "";
+                NSLog(@"         processing SASL_CB_AUTHNAME (%s)", ldap_inst->authenticationId ? ldap_inst->authenticationId : "");
+                interact->result = ldap_inst->authenticationId ? ldap_inst->authenticationId : "";
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_PASS:
@@ -81,8 +81,8 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_USER:
-                NSLog(@"         processing SASL_CB_USER (%s)", ldap_inst->user ? ldap_inst->user : "");
-                interact->result = ldap_inst->user ? ldap_inst->user : "";
+                NSLog(@"         processing SASL_CB_USER (%s)", ldap_inst->authorizationId ? ldap_inst->authorizationId : "");
+                interact->result = ldap_inst->authorizationId ? ldap_inst->authorizationId : "";
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_NOECHOPROMPT:
@@ -121,44 +121,38 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
 }
 
 -(int)execute:(NSDictionary*)args async:(BOOL)async
-{    
-    //BUGBUG -- this needs to occur in a thread
-    if (_connection.useTLS) {
-        NSLog(@"[INFO] Starting TLS");
-        int result = ldap_start_tls_s(_connection.ld, NULL, NULL);
-        if (result != LDAP_SUCCESS) {
-            char *msg;
-            ldap_get_option(_connection.ld, LDAP_OPT_DIAGNOSTIC_MESSAGE, (void*)&msg);
-            NSLog(@"[ERROR] Error occurred in starting TLS: %s (%s)", ldap_err2string(result), msg);
-            ldap_memfree(msg);
-        } else {
-            NSLog(@"[INFO] TLS established");
-        }
-    }
-    
+{
     memset(&_auth, 0, sizeof(MyLDAPAuth));
     
     // dn is always ignored on sasl bind
-    _auth.mech = [self getAuthValue:@"mech" args:args option:LDAP_OPT_X_SASL_MECH];
-    _auth.authuser = [self getAuthValue:@"user" args:args option:LDAP_OPT_X_SASL_AUTHCID];
-    _auth.realm = [self getAuthValue:@"realm" args:args option:LDAP_OPT_X_SASL_REALM];
     _auth.passwd = [self getAuthValue:@"password" args:args option:-1];
+    _auth.mech = [self getAuthValue:@"mech" args:args option:LDAP_OPT_X_SASL_MECH];
+    _auth.realm = [self getAuthValue:@"realm" args:args option:LDAP_OPT_X_SASL_REALM];
+    _auth.authorizationId = [self getAuthValue:@"authorizationId" args:args option:LDAP_OPT_X_SASL_AUTHZID];
+    _auth.authenticationId = [self getAuthValue:@"authenticationId" args:args option:LDAP_OPT_X_SASL_AUTHCID];
     
     NSLog(@"[DEBUG] LDAP saslBind with:");
-    NSLog(@"[DEBUG]      Mech:      %s", _auth.mech     ? _auth.mech     : "(NULL)");
-    NSLog(@"[DEBUG]      User:      %s", _auth.user     ? _auth.user     : "(NULL)");
-    NSLog(@"[DEBUG]      Auth User: %s", _auth.authuser ? _auth.authuser : "(NULL)");
-    NSLog(@"[DEBUG]      Realm:     %s", _auth.realm    ? _auth.realm    : "(NULL)");
-    NSLog(@"[DEBUG]      Passwd:    %s", _auth.passwd   ? _auth.passwd   : "(NULL)");
+    NSLog(@"[DEBUG]      Passwd:          %s", _auth.passwd   ? _auth.passwd   : "(NULL)");
+    NSLog(@"[DEBUG]      Mech:            %s", _auth.mech     ? _auth.mech     : "(NULL)");
+    NSLog(@"[DEBUG]      Realm:           %s", _auth.realm    ? _auth.realm    : "(NULL)");
+    NSLog(@"[DEBUG]      AuthorizationId: %s", _auth.authorizationId  ? _auth.authorizationId : "(NULL)");
+    NSLog(@"[DEBUG]      AuthenticationId %s", _auth.authenticationId ? _auth.authenticationId : "(NULL)");
+
+    /*
+     
+     From the UnboundID documentation:
+     
+     Note, however, that LDAP does place restrictions on asynchronous operation processing.
+     In particular, bind operations and StartTLS operations must always be processed in a
+     synchronous manner. If a client is going to process asynchronous operations, then it
+     must take care to ensure that it does not attempt to process bind or StartTLS operations
+     while other operations may be in progress.
+     
+     */
     
-    int result;
+    NSLog(@"[INFO] LDAP SASLBind");
     
-    if (async) {
-        const char *rmech = NULL;
-        result = ldap_sasl_interactive_bind(_connection.ld, NULL, _auth.mech, NULL, NULL, LDAP_SASL_QUIET, ldap_sasl_interact, &_auth, NULL, &rmech, &_messageId);
-    } else {
-        result = ldap_sasl_interactive_bind_s(_connection.ld, NULL, _auth.mech, NULL, NULL, LDAP_SASL_QUIET, ldap_sasl_interact, &_auth);
-    }
+    int result = ldap_sasl_interactive_bind_s(_connection.ld, NULL, _auth.mech, NULL, NULL, LDAP_SASL_QUIET, ldap_sasl_interact, &_auth);
     
     // NOTE: Do NOT free the memory allocated by getAuthValue -- it will be freed in the _destroy method when the proxy is destroyed
     
