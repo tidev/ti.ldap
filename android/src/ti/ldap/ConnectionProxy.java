@@ -112,9 +112,9 @@ public class ConnectionProxy extends KrollProxy
             return;
         }
 
-        SocketFactory socketFactory = startTLS();
-
         Log.d(LCAT, "LDAP initialize with host: " + host + " and port: " + port);
+
+        SocketFactory socketFactory = startTLS();
 
 		HashMap<String,Object> event = new HashMap<String,Object>();
 		event.put("method", "connect");

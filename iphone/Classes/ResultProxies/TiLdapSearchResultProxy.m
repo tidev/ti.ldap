@@ -15,6 +15,7 @@
     if (self = [super _initWithPageContext:[connection pageContext]]) {
         _searchResult = searchResult;
         _connection = [connection retain];
+        _entry = NULL;
     }
     
     return self;
@@ -32,6 +33,7 @@
     if (_searchResult) {
         ldap_msgfree(_searchResult);
         _searchResult = NULL;
+        _entry = NULL;
     }
     
 	[super _destroy];
@@ -54,28 +56,26 @@
 
 -(id)firstEntry:(id)args
 {
-    LDAPMessage *entry = ldap_first_entry(_connection.ld, _searchResult);
-    if (entry == NULL) {
+    _entry = ldap_first_entry(_connection.ld, _searchResult);
+    if (_entry == NULL) {
         NSLog(@"[ERROR] Error occurred in firstEntry");
         return nil;
     }
     
-    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:entry searchResult:self];
+    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:_entry searchResult:self];
     
     return entryProxy;
 }
 
--(id)nextEntry:(id)arg
+-(id)nextEntry:(id)args
 {
-    ENSURE_SINGLE_ARG(arg, TiLdapEntryProxy);
-    
-    LDAPMessage *entry = ldap_next_entry(_connection.ld, [arg entry]);
-    if (entry == NULL) {
+    _entry = ldap_next_entry(_connection.ld, _entry);
+    if (_entry == NULL) {
         // NULL is returned when there are no more entries
         return nil;
     }
     
-    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:entry searchResult:self];
+    TiLdapEntryProxy *entryProxy = [TiLdapEntryProxy entryWithLDAPMessage:_entry searchResult:self];
     
     return entryProxy;
 }

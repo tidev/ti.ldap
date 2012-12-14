@@ -42,7 +42,8 @@ public class SaslBindRequestProxy extends RequestProxy {
 	@Override
 	public LDAPResult execute(KrollDict args, Boolean async)
 	{
-		String dn = args.optString("dn", null);
+	    // dn is always ignored on sasl bind
+		String dn = null;
 		String passwd = args.optString("password", null);
 		String mech = args.optString("mech", null);
 		String realm = args.optString("realm", null);
@@ -63,7 +64,7 @@ public class SaslBindRequestProxy extends RequestProxy {
 			optionsList.add(SASLUtils.SASL_OPTION_MECHANISM + "=" + mech);
 		}
 	
-        Log.d(LCAT, "LDAP SASLBind with dn: " + dn);
+        Log.d(LCAT, "LDAP SASLBind");
 
         try {
         	// There is no support for asynchronous bind in the Unbound LDAP SDK.

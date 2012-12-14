@@ -41,16 +41,9 @@
      
     */
     
-    int result;
+    NSLog(@"[INFO] LDAP simpleBind with dn: %@", dn);
     
-    if (async) {
-        _messageId = ldap_simple_bind(_connection.ld, [dn UTF8String], [passwd UTF8String]);
-        // Get the last result code
-        ldap_get_option(_connection.ld, LDAP_OPT_RESULT_CODE, &result);
-    } else {
-        result = ldap_simple_bind_s(_connection.ld, [dn UTF8String], [passwd UTF8String]);
-    }
-    
+    int result = ldap_simple_bind_s(_connection.ld, [dn UTF8String], [passwd UTF8String]);
     return result;
 }
 
