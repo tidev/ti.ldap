@@ -38,7 +38,9 @@
     
     NSString *base = [TiUtils stringValue:@"base" properties:args];
     int scope = [TiUtils intValue:@"scope" properties:args def:LDAP_SCOPE_DEFAULT];
-    NSString *filter = [TiUtils stringValue:@"filter" properties:args def:nil];
+    
+	// Use the same default value that openLDAP uses when a filter is not provided
+    NSString *filter = [TiUtils stringValue:@"filter" properties:args def:@"(objectClass=*)"];
     
     // Attributes are passed as an array of strings. Convert to an array of UTF8 strings.
     NSArray *inAttrs = [args objectForKey:@"attrs"];
@@ -56,20 +58,17 @@
     }
     
     BOOL attrsOnly = [TiUtils boolValue:@"attrsOnly" properties:args def:0];
-
-    //Timeout is specified in ms
-    id timeout = [args objectForKey:@"timeout"];
-    struct timeval *timeVal = NULL;
-    if (timeout) {
-        timeVal = (struct timeval *)malloc(sizeof(struct timeval));
-        timeVal->tv_sec = [TiUtils intValue:@"sec" properties:timeout def:1];
-        timeVal->tv_usec = [TiUtils intValue:@"usec" properties:timeout def:0];
+    int sizeLimit = [TiUtils intValue:@"sizeLimit" properties:args def:0];
+    id timeout = [args objectForKey:@"timeout"]; // ms
+    // Negative values indicate no timeout is desired
+    struct timeval timeVal = { -1, -1 };
+    if (timeout != nil) {
+        int value = [TiUtils intValue:timeout];
+        timeVal.tv_sec = value / 1000;
+        timeVal.tv_usec = (value % 1000) * 1000;
     }
     
-    int sizeLimit = [TiUtils intValue:@"sizeLimit" properties:args def:0];
-    
     int result;
-    
     if (async) {
         result = ldap_search_ext(_connection.ld,
                                  [base UTF8String],
@@ -79,7 +78,7 @@
                                  attrsOnly,
                                  NULL,
                                  NULL,
-                                 timeVal,
+                                 &timeVal,
                                  sizeLimit,
                                  &_messageId);
         // Get the last result code
@@ -93,7 +92,7 @@
                                    attrsOnly,
                                    NULL,
                                    NULL,
-                                   timeVal,
+                                   &timeVal,
                                    sizeLimit,
                                    &_ldapMessage);
     }
@@ -101,10 +100,6 @@
     if (attrs) {
         free(attrs);
         attrs = NULL;
-    }
-    if (timeVal) {
-        free(timeVal);
-        timeVal = NULL;
     }
     
     return result;

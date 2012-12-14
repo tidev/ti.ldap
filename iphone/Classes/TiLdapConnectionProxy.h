@@ -12,13 +12,15 @@
 
 @interface TiLdapConnectionProxy : TiProxy {
 @private
-    LDAP    *_ld;
+    LDAP        *_ld;
+    BOOL        _bound;
 }
 
 -(LDAP*)ld;
 -(BOOL)isBound;
+-(void)setBound:(BOOL)bound;
 
 @property(nonatomic,readwrite) BOOL useTLS;
-@property(nonatomic,readwrite) BOOL bound;
+@property(nonatomic,readwrite,retain) id certFile;
 
 @end

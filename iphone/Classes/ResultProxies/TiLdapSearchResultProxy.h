@@ -11,6 +11,7 @@
 @interface TiLdapSearchResultProxy : TiProxy {
     TiLdapConnectionProxy *_connection;
     LDAPMessage *_searchResult;
+    LDAPMessage *_entry;
 }
 
 +(TiLdapSearchResultProxy*)searchResultWithLDAPMessage:(LDAPMessage*)searchResult connection:(TiLdapConnectionProxy*)connection;
