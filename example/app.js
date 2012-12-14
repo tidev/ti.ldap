@@ -11,7 +11,7 @@ var win = Ti.UI.createWindow({
 });
 
 var btnSimple = Ti.UI.createButton({
-	title: 'Simple',
+	title: 'Connect Simple',
 	top: 4,
 	width: 200,
 	height: 40
@@ -20,103 +20,155 @@ win.add(btnSimple);
 btnSimple.addEventListener('click', doSimple);
 
 var btnSASL = Ti.UI.createButton({
-	title: 'SASL',
+	title: 'Connect SASL',
 	top: 4,
 	width : 200,
 	height: 40
 });
 win.add(btnSASL);
 btnSASL.addEventListener('click', doSASL);
+
+var btnSearch = Ti.UI.createButton({
+	title: "Search",
+	top: 4,
+	width: 200,
+	height: 40
+});
+win.add(btnSearch);
+btnSearch.addEventListener('click', doSearch);
+
+var btnUnbind = Ti.UI.createButton({
+	title: "Disconnect",
+	top: 4,
+	width: 200,
+	height: 40
+});
+win.add(btnUnbind);
+btnUnbind.addEventListener('click', doUnbind);
+
 win.open();
 
-// TODO: write your module tests here
 var ldap = require('ti.ldap');
 Ti.API.info("module is => " + ldap);
 
+var connection = null;
 
 function doSimple() {
-	//BUGBUG: Should these continue to be single APIs or properties on the connection proxy that
-	//are evaluated at the time of bind?
-	var connection = ldap.createConnection({
-		success: function () {},
-		error: function() {}
+	connection = ldap.createConnection({
+		//useTLS: true,
+		//certFile: Titanium.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, "ca-certs.pem"),
+		//certFile: Ti.Filesystem.resourcesDirectory + "ca-certs.pem",
+		//timeout: 2000,
+		async: true
 	});
 	
-	var result;
-	result = connection.initialize({
-		uri: "ldap://50.18.181.104:389"
+	Ti.API.info("useTLS: " + connection.useTLS);
+	Ti.API.info("certFile: " + connection.certFile);
+	Ti.API.info("async: " + connection.async);
+	Ti.API.info("sizeLimit: " + connection.sizeLimit);
+	Ti.API.info("timeout: " + connection.timeout);
+	
+	connection.connect({
+		uri: "ldap://50.18.181.104:389",
+		success: doBind,
+		error: logError
 	});
-	
-	result = connection.setOption(connection.OPT_PROTOCOL_VERSION, connection.VERSION3);
-	
-	result = connection.simpleBind({} );
-	
-	var searchResult1 = connection.search({
-		dn: "dc=appcelerator,dc=com",
-		scope: connection.SCOPE_SUBTREE,
-		filter: "(ou=people)"
-	});
-	showSearchResults(searchResult1);
-	
-	var searchResult2 = connection.search({
-		dn: "ou=people,dc=appcelerator,dc=com",
-		scope: connection.SCOPE_CHILDREN
-	});
-	showSearchResults(searchResult2);
-	
-	var searchResult3 = connection.search({
-		dn: "ou=people,dc=appcelerator,dc=com",
-		scope: connection.SCOPE_CHILDREN,
-		filter: "(cn=Kailun Shi)",
-		attrs: [ 'mobile', 'homePhone', 'title', 'mail']
-	});
-	showSearchResults(searchResult3);
-	
-	connection.unBind();
 }
+
+function doBind() {
+	connection.simpleBind({
+		//dn: "uid=jenglish,ou=people,dc=appcelerator,dc=com",
+		//password: "password",
+		success: logSuccess,
+		error: logError
+	});
+}
+
+function doUnbind() {
+	connection.unBind();
+	connection = null;
+}
+
+function logSuccess (e)
+{
+	Ti.API.info("SUCCESS: " + JSON.stringify(e));
+}
+
+function logError (e) {
+	Ti.API.error("ERROR: " + JSON.stringify(e));
+}
+
+function doSearch() {
+
+	Ti.API.info(">>>Search 1");
+	connection.search({
+		base: "dc=appcelerator,dc=com",
+		scope: ldap.SCOPE_SUBTREE,
+		filter: "(ou=people)",
+		async: true,
+		success: showSearchResults1,
+		error: logError
+	});
+
+	Ti.API.info(">>>Search 2");
+	connection.search({
+		base: "ou=people,dc=appcelerator,dc=com",
+		scope: ldap.SCOPE_CHILDREN,
+		async: true,
+		success: showSearchResults2,
+		error: logError
+	});
+	
+	Ti.API.info(">>>Search 3");
+	connection.search({
+		base: "ou=people,dc=appcelerator,dc=com",
+		scope: ldap.SCOPE_CHILDREN,
+		filter: "(cn=Jeff English)",
+		attrs: [ 'mobile', 'homePhone', 'title', 'mail'],
+		async: true,
+		success: showSearchResults3,
+		error: logError
+	});
+	
+	
+}
+
+
 
 function doSASL() {
-	//BUGBUG: Should these continue to be single APIs or properties on the connection proxy that
-	//are evaluated at the time of bind?
-	var connection = ldap.createConnection({
-		success: function () {},
-		error: function() {}
-	});
+	connection = ldap.createConnection({
+		useTLS: true,
+		async: true
+		//tlsCACertFile: Titanium.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, "ca-certs.pem")
+	});	
 	
-	var result;
-
-	result = connection.initialize({
-		uri: "ldap://10.0.1.80:389"
-	});
-	
-	result = connection.setOption(connection.OPT_PROTOCOL_VERSION, connection.VERSION3);
-	
-	var caCert = Titanium.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, "ca-certs.pem");
-	if (caCert && caCert.exists()) {
-		result = connection.setOption(connection.OPT_X_TLS_CACERTFILE, caCert);
-	}
-	
-	result = connection.saslBind({
-		//mech: "DIGEST-MD5",
-		mech: "PLAIN",
-		user: "diradmin",
-		//realm: 
-		passwd: "s3c4et99&n",
-		cert: true
-	});
-	
-	var searchResult1 = connection.search({
-		dn: "dc=appcelerator,dc=com",
-		scope: connection.SCOPE_SUBTREE,
-		filter: "(ou=people)"
-	});
-	showSearchResults(searchResult1);
-	
-	connection.unBind();
+	connection.connect({
+		//uri: "ldap://63.140.112.162", //bindlebinaries.com
+		uri: "ldap://50.18.181.104:389",
+		success: doSaslBind,
+		error: logError
+	})
 }
 
-function showSearchResults(searchResult)
+function doSaslBind() {	
+	connection.saslBind({
+		mech: "PLAIN",
+		//mech: "DIGEST-MD5",
+		authenticationId: "u:jeffenglish",
+		//authorizationId: "dn:Jeff English",
+		//realm: "", 
+		password: "password",
+		success: logSuccess,
+		error: logError
+	});
+}
+
+function showSearchResults(e)
 {
+	Ti.API.info(">>> ShowSearchResults");
+	Ti.API.info(JSON.stringify(e));
+	
+	var searchResult = e.result;
 	if (searchResult) {
 		var count = searchResult.countEntries();
 		Ti.API.info("Search Result Count: " + count);
@@ -129,12 +181,15 @@ function showSearchResults(searchResult)
 			
 			var attribute = entry.firstAttribute();
 			while (attribute) {
+				Ti.API.info("attribute: " + attribute);
 				//var values = entry.getValues(attribute);
 				var values = entry.getValuesLen(attribute);
-				for (var i=0; i<values.length; i++) {
-					Ti.API.info("blob length: " + values[i].length);
-					Ti.API.info("blob mimeType: " + values[i].mimeType);
-					Ti.API.info(attribute + " : " + values[i]);
+				if (values) {
+					for (var i=0; i<values.length; i++) {
+						Ti.API.info("  blob length: " + values[i].length);
+						Ti.API.info("  blob mimeType: " + values[i].mimeType);
+						Ti.API.info("  value: " + values[i]);
+					}
 				}
 				
 				attribute = entry.nextAttribute();
@@ -145,6 +200,20 @@ function showSearchResults(searchResult)
 	}
 }
 
-
+function showSearchResults1(e)
+{
+	Ti.API.info(">>>>> 1 <<<<<");
+	showSearchResults(e);
+}
+function showSearchResults2(e)
+{
+	Ti.API.info(">>>>> 2 <<<<<");
+	showSearchResults(e);
+}
+function showSearchResults3(e)
+{
+	Ti.API.info(">>>>> 3 <<<<<");
+	showSearchResults(e);
+}
 
 
