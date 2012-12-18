@@ -34,6 +34,7 @@ import com.unboundid.ldap.sdk.LDAPConnectionOptions;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 import com.unboundid.util.ssl.TrustStoreTrustManager;
+import com.unboundid.ldap.sdk.LDAPURL;
 
 
 @Kroll.proxy(creatableInModule=LdapModule.class, propertyAccessors = { "useTLS", "certFile" })
@@ -96,18 +97,14 @@ public class ConnectionProxy extends KrollProxy
     {
         KrollDict args = new KrollDict(hm);
 
-        int port = 389;
-        String host = "";
+        String host;
+        int port;
         try {
-            URI uri = new URI(args.optString("uri", "ldap://127.0.0.1"));
-            // NOTE: Need to strip off scheme
-            host = uri.getHost();
-            port = uri.getPort();
-            if (port == -1) {
-                port = 389;
-            }
+            LDAPURL url = new LDAPURL(args.optString("uri", "ldap://127.0.0.1:389"));
+            host = url.getHost();
+            port = url.getPort();
         }
-        catch (URISyntaxException e) {
+        catch (LDAPException e) {
             Log.e(LCAT, "Invalid uri specified: " + e.toString());
             return;
         }

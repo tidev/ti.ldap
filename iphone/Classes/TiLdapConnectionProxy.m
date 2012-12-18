@@ -61,7 +61,7 @@
     
     NSString *uri = [TiUtils stringValue:@"uri" properties:args def:@"ldap://127.0.0.1:389"];
   
-    NSLog(@"[DEBUG] LDAP initialize with url: %@", uri);
+    NSLog(@"[DEBUG] LDAP initialize with uri: %@", uri);
 
     int result = ldap_initialize(&_ld, [uri UTF8String]);
     if (result == LDAP_SUCCESS) {
@@ -206,10 +206,12 @@
 
 -(NSNumber*)getTimeout
 {
-    struct timeval timeVal;
+    struct timeval *timeVal;
     int result = ldap_get_option(_ld, LDAP_OPT_TIMEOUT, &timeVal);
     if (result == LDAP_SUCCESS) {
-        return NUMINT((timeVal.tv_sec * 1000) + (timeVal.tv_usec / 1000));
+        NSNumber *timeout = NUMINT((timeVal->tv_sec * 1000) + (timeVal->tv_usec / 1000));
+        ldap_memfree(timeVal);
+        return timeout;
     }
     
     NSLog(@"[ERROR] Error retrieving timeout");

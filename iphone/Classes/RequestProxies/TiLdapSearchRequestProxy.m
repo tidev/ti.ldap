@@ -41,9 +41,13 @@
     
 	// Use the same default value that openLDAP uses when a filter is not provided
     NSString *filter = [TiUtils stringValue:@"filter" properties:args def:@"(objectClass=*)"];
+    if (filter.length == 0) {
+        filter = @"(objectClass=*)";
+    }
     
     // Attributes are passed as an array of strings. Convert to an array of UTF8 strings.
-    NSArray *inAttrs = [args objectForKey:@"attrs"];
+    id inAttrs = [args objectForKey:@"attrs"];
+    ENSURE_TYPE_OR_NIL(inAttrs,NSArray);
     int count = [inAttrs count];
     const char** attrs = NULL;
     if (count > 0) {

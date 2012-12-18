@@ -38,6 +38,17 @@
 	[super _destroy];
 }
 
+-(void)checkError:(NSString*)method
+{
+    int err = -1;
+    ldap_get_option(_searchResult.connection.ld, LDAP_OPT_RESULT_CODE, &err);
+    if (err != LDAP_SUCCESS) {
+        NSLog(@"[ERROR] Error occurred in %@: %@",
+              method,
+              [NSString stringWithUTF8String:ldap_err2string(err)]);
+    }
+}
+
 -(LDAPMessage*)entry
 {
     return _entry;
@@ -52,7 +63,7 @@
             result = [NSString stringWithUTF8String:dn];
             ldap_memfree(dn);
         } else {
-            NSLog(@"[ERROR] Error occurred in getDn");
+            [self checkError:@"getDn"];
         }
     }
     
@@ -62,7 +73,7 @@
 -(NSString*)firstAttribute:(id)args
 {
     NSString *result = nil;
-    
+
     if (_ber != NULL) {
         ber_free(_ber, 0);
         _ber = NULL;
@@ -73,7 +84,7 @@
         result = [NSString stringWithUTF8String:attribute];
         ldap_memfree(attribute);
     } else {
-        NSLog(@"[ERROR] Error occurred in firstAttribute");
+        [self checkError:@"firstAttribute"];
     }
     
     return result;
@@ -83,13 +94,14 @@
 -(NSString*)nextAttribute:(id)args
 {
     NSString *result = nil;
-    
+
     char *attribute = ldap_next_attribute(_searchResult.connection.ld, _entry, _ber);
     if (attribute != NULL) {
         result = [NSString stringWithUTF8String:attribute];
         ldap_memfree(attribute);
+    } else {
+        [self checkError:@"nextAttribute"];
     }
-    // NULL is returned when there are no more attributes
     
     return result;
     
@@ -112,7 +124,7 @@
         }
         ldap_value_free(vals);
     } else {
-        NSLog(@"[ERROR] Error occurred in getValues");
+        [self checkError:@"getValues"];
     }
     
     return result;
@@ -136,6 +148,8 @@
             }
         }
         ldap_value_free_len(vals);
+    } else {
+        [self checkError:@"getValuesLen"];
     }
     
     return result;
