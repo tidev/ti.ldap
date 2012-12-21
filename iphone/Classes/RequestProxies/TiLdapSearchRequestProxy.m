@@ -11,9 +11,9 @@
 
 @implementation TiLdapSearchRequestProxy
 
-+(id)requestWithProxyAndArgs:(TiLdapConnectionProxy*)connection args:(NSDictionary*)args
++(id)requestWithProxy:(TiLdapConnectionProxy*)connection
 {
-    return [[[self alloc] initRequest:@"search" connection:connection args:args] autorelease];
+    return [[[self alloc] initRequest:@"search" connection:connection] autorelease];
 }
 
 // Override and create search result proxy
@@ -36,20 +36,21 @@
         return -1;
     }
     
-    NSString *base = [TiUtils stringValue:@"base" properties:args];
+    NSString *base = [TiUtils stringValue:@"base" properties:args def:@""];
     int scope = [TiUtils intValue:@"scope" properties:args def:LDAP_SCOPE_DEFAULT];
     
 	// Use the same default value that openLDAP uses when a filter is not provided
-    NSString *filter = [TiUtils stringValue:@"filter" properties:args def:@"(objectClass=*)"];
-    if (filter.length == 0) {
-        filter = @"(objectClass=*)";
+    NSString *filter = @"(objectClass=*)";
+    id inFilter = [args objectForKey:@"filter"];
+    if (!IS_NULL_OR_NIL(inFilter)) {
+        filter = [TiUtils stringValue:inFilter];
     }
-    
+
     // Attributes are passed as an array of strings. Convert to an array of UTF8 strings.
+    const char** attrs = NULL;
     id inAttrs = [args objectForKey:@"attrs"];
     ENSURE_TYPE_OR_NIL(inAttrs,NSArray);
     int count = [inAttrs count];
-    const char** attrs = NULL;
     if (count > 0) {
         attrs = malloc(sizeof(const char*) * (count+1));
         if (attrs) {
@@ -63,13 +64,13 @@
     
     BOOL attrsOnly = [TiUtils boolValue:@"attrsOnly" properties:args def:0];
     int sizeLimit = [TiUtils intValue:@"sizeLimit" properties:args def:0];
-    id timeout = [args objectForKey:@"timeout"]; // ms
-    // Negative values indicate no timeout is desired
+    id timeLimit = [args objectForKey:@"timeLimit"]; // ms
+    // Negative values indicate no timeLimit is desired
     struct timeval timeVal = { -1, -1 };
-    if (timeout != nil) {
-        int value = [TiUtils intValue:timeout];
-        timeVal.tv_sec = value / 1000;
-        timeVal.tv_usec = (value % 1000) * 1000;
+    if (!IS_NULL_OR_NIL(timeLimit)) {
+        int value = [TiUtils intValue:timeLimit];
+        timeVal.tv_sec = value;
+        timeVal.tv_usec = 0;
     }
     
     int result;

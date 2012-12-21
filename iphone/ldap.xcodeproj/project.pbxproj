@@ -40,6 +40,8 @@
 		A23EE7AA16766F4400E6244C /* TiLdapSearchResultProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A23EE79E16766F4400E6244C /* TiLdapSearchResultProxy.m */; };
 		A2A25D7D164461CE00F5C093 /* TiLdapConnectionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */; };
 		A2A25D7E164461CE00F5C093 /* TiLdapConnectionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */; };
+		A2E2F33F168395D20015FFF3 /* TiLdapConnectRequestProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2E2F33D168395D20015FFF3 /* TiLdapConnectRequestProxy.h */; };
+		A2E2F340168395D20015FFF3 /* TiLdapConnectRequestProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E2F33E168395D20015FFF3 /* TiLdapConnectRequestProxy.m */; };
 		A2ECB34A1666A530002520CF /* libsasl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ECB3491666A530002520CF /* libsasl2.a */; };
 		A2F00AF116659EF400156CD8 /* liblber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F00AEC16659EE200156CD8 /* liblber.a */; };
 		A2F00AF216659EF400156CD8 /* libopenldap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F00AEA16659EE200156CD8 /* libopenldap.a */; };
@@ -98,6 +100,8 @@
 		A23EE79E16766F4400E6244C /* TiLdapSearchResultProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiLdapSearchResultProxy.m; sourceTree = "<group>"; };
 		A2A25D7B164461CE00F5C093 /* TiLdapConnectionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiLdapConnectionProxy.h; path = Classes/TiLdapConnectionProxy.h; sourceTree = "<group>"; };
 		A2A25D7C164461CE00F5C093 /* TiLdapConnectionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiLdapConnectionProxy.m; path = Classes/TiLdapConnectionProxy.m; sourceTree = "<group>"; };
+		A2E2F33D168395D20015FFF3 /* TiLdapConnectRequestProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiLdapConnectRequestProxy.h; sourceTree = "<group>"; };
+		A2E2F33E168395D20015FFF3 /* TiLdapConnectRequestProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiLdapConnectRequestProxy.m; sourceTree = "<group>"; };
 		A2ECB3491666A530002520CF /* libsasl2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsasl2.a; path = "openldap/ports/security/cyrus-sasl/build/Release-iphoneos/libsasl2.a"; sourceTree = "<group>"; };
 		A2F00AD916659EE000156CD8 /* openldap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openldap.xcodeproj; path = openldap/openldap.xcodeproj; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiLdap_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiLdap_Prefix.pch; sourceTree = SOURCE_ROOT; };
@@ -192,6 +196,8 @@
 				A23EE79716766F4400E6244C /* TiLdapSearchRequestProxy.m */,
 				A23EE79816766F4400E6244C /* TiLdapSimpleBindRequestProxy.h */,
 				A23EE79916766F4400E6244C /* TiLdapSimpleBindRequestProxy.m */,
+				A2E2F33D168395D20015FFF3 /* TiLdapConnectRequestProxy.h */,
+				A2E2F33E168395D20015FFF3 /* TiLdapConnectRequestProxy.m */,
 			);
 			name = RequestProxies;
 			path = Classes/RequestProxies;
@@ -235,6 +241,7 @@
 				A23EE7A516766F4400E6244C /* TiLdapSimpleBindRequestProxy.h in Headers */,
 				A23EE7A716766F4400E6244C /* TiLdapEntryProxy.h in Headers */,
 				A23EE7A916766F4400E6244C /* TiLdapSearchResultProxy.h in Headers */,
+				A2E2F33F168395D20015FFF3 /* TiLdapConnectRequestProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +345,7 @@
 				A23EE7A616766F4400E6244C /* TiLdapSimpleBindRequestProxy.m in Sources */,
 				A23EE7A816766F4400E6244C /* TiLdapEntryProxy.m in Sources */,
 				A23EE7AA16766F4400E6244C /* TiLdapSearchResultProxy.m in Sources */,
+				A2E2F340168395D20015FFF3 /* TiLdapConnectRequestProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

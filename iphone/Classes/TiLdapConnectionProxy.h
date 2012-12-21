@@ -17,8 +17,14 @@
 }
 
 -(LDAP*)ld;
+-(void)setld:(LDAP*)ld;
 -(BOOL)isBound;
 -(void)setBound:(BOOL)bound;
+
+-(void)startTLS;
+-(void)setAsync;
+-(void)setSizeLimit;
+-(void)setTimeLimit;
 
 @property(nonatomic,readwrite) BOOL useTLS;
 @property(nonatomic,readwrite,retain) id certFile;

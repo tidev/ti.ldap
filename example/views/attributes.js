@@ -1,26 +1,36 @@
+/*
+ * View for displaying attributes for the selected entry
+ */
+
+var u = Ti.Android != undefined ? 'dp' : 0;
+
 var entry = null;
 var table = null;
 
-exports.initialize = function(viewInfo) {
+exports.initialize = function (viewInfo)
+{
+	// The entry property contains the selected entry proxy
 	entry = viewInfo.entry;
-}
+};
 
-exports.cleanup = function() {
+exports.cleanup = function ()
+{
 	entry = null;
 	table = null;
-}
+};
 
-exports.create = function(win) {
+exports.create = function (win)
+{
 	win.title = 'Attributes';
-	
+
 	table = Ti.UI.createTableView({
-		width: Ti.UI.FILL,
-		height: Ti.UI.FILL
+		width:Ti.UI.FILL,
+		height:Ti.UI.FILL
 	});
 	win.add(table);
-	
+
 	populateTable();
-}
+};
 
 function populateTable() {
 	function createRow(attribute, value) {
@@ -28,17 +38,16 @@ function populateTable() {
 			backgroundColor: 'white',
 			layout: 'vertical'
 		});
-		
 		row.add(Ti.UI.createLabel({
 			text: attribute,
 			textAlign: 'left',
-			font: {fontSize:18 + u, fontWeight:'bold'},
+			font: {fontSize:18+u, fontWeight:'bold'},
 			left: 4
 		}));
 		row.add(Ti.UI.createLabel({
 			text: value ? value : "Attribute has no value",
 			textAlign: 'left',
-			font: {fontSize:14 + u},
+			font: {fontSize:14+u},
 			left: 4,
 			color: 'darkgray'	
 		}));
@@ -50,13 +59,16 @@ function populateTable() {
 	if (entry) {
 		var attribute = entry.firstAttribute();
 		while (attribute) {
+			// Retrieve the attribute values -- this code assumes that each
+			// attribute is a string value. Use `getValuesLen` to retrieve 
+			// binary attribute values as blobs
 			var values = entry.getValues(attribute);
 			if (values) {
 				for (var i=0; i<values.length; i++) {
-					tableRows.push(createRow(attribute,values[i]));
+					tableRows.push(createRow(attribute, values[i]));
 				}
 			} else {
-				tableRows.push(createRow(attribute,null));
+				tableRows.push(createRow(attribute, null));
 			}
 			attribute = entry.nextAttribute();
 		}

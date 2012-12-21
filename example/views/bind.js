@@ -1,14 +1,23 @@
+/*
+ * View for specifying bind information
+ */
+
+var u = Ti.Android != undefined ? 'dp' : 0;
+
 var connection = null;
 var loading = null;
 
 exports.initialize = function(viewInfo) {
+	// The connection property contains the connection proxy
 	connection = viewInfo.connection;
-}
+};
 
 exports.cleanup = function() {
+	// Disconnect when leaving the bind window
+	connection.disconnect();
 	connection = null;
 	loading = null;
-}
+};
 
 exports.create = function(win) {
 	win.title = 'Simple Bind';
@@ -46,7 +55,7 @@ exports.create = function(win) {
 	});
 	win.add(bindButton);
 
-    bindButton.addEventListener('click', function(e) {
+    bindButton.addEventListener('click', function() {
     	doBind({
     		dn: dn.value,
     		password: password.value
@@ -54,33 +63,28 @@ exports.create = function(win) {
     });
     
 	loading = Ti.UI.createActivityIndicator({
-		height:50, width:50,
-		color:'white',
-		backgroundColor:'black', borderRadius:10,
-		style:Ti.UI.iPhone.ActivityIndicatorStyle.BIG
+		height: 50, width: 50,
+		color: 'white',
+		backgroundColor: 'black', borderRadius: 10,
+		message: 'Binding...'
 	});
 	if (Ti.Platform.name === 'iPhone OS') {
 		win.add(loading);
 	}
-}
+};
 
 function doBind(data) {
-	Ti.API.info("Timeout: " + connection.timeout);
-	
 	loading.show();
-	connection.simpleBind({
-    	dn: data.dn,
-    	password: data.password,
-        success: function(e) {
+	connection.simpleBind(data,
+        function() {
         	loading.hide();
         	require('navigator').push({
         		viewName: 'search',
         		connection: connection
         	});
         },
-        error: function(e) {
+        function(e) {
         	loading.hide();
         	alert(e.message);
-        }
-    });
+        });
 }

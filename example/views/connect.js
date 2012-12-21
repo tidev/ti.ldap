@@ -1,16 +1,23 @@
+/*
+ * View for specifying connection information
+ */
+
+var u = Ti.Android != undefined ? 'dp' : 0;
+
 var connection = null;
 var ldap = null;
 var loading = null;
 
-exports.initialize = function(viewInfo) {
+exports.initialize = function() {
+	// Load the LDAP module
 	ldap = require('ti.ldap');	
-}
+};
 
 exports.cleanup = function() {
 	ldap = null;
 	connection = null;
 	loading = null;
-}
+};
 
 exports.create = function(win) {
 	win.title = 'Connect';
@@ -30,7 +37,7 @@ exports.create = function(win) {
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE
     });
     win.add(uri);
-
+ 
     var connect = Ti.UI.createButton({
         title: 'Connect',
         top: 10+u, left: 10+u, right: 10+u, bottom: 10+u,
@@ -38,40 +45,39 @@ exports.create = function(win) {
     });
     win.add(connect);
 
-    connect.addEventListener('click', function(e) {
+    connect.addEventListener('click', function() {
     	doConnect({
     		uri: uri.value
     	});
     });
     
 	loading = Ti.UI.createActivityIndicator({
-		height:50, width:50,
-		color:'white',
-		backgroundColor:'black', borderRadius:10,
-		style:Ti.UI.iPhone.ActivityIndicatorStyle.BIG
+		height: 50, width: 50,
+		color: 'white',
+		backgroundColor: 'black', borderRadius: 10,
+		message: 'Connecting...'
 	});
 	if (Ti.Platform.name === 'iPhone OS') {
 		win.add(loading);
 	}
-}
+};
 
 function doConnect(data) {
 	loading.show();
 	connection = ldap.createConnection({
-		timeout: 5000
+		// Set global request timelimit to 5 seconds
+		timeLimit: 5
 	});
-   	connection.connect({
-    	uri: data.uri,
-        success: function(e) {
+   	connection.connect(data,
+   		function() {
         	loading.hide();
-        	require('navigator').push({
+         	require('navigator').push({
         		viewName: 'bind',
         		connection: connection
         	});
         },
-        error: function(e) {
+        function(e) {
         	loading.hide();
          	alert(e.message);
-        }
-    });
+        });
 }

@@ -9,8 +9,9 @@
 #import "TiLdapSimpleBindRequestProxy.h"
 #import "TiLdapSaslBindRequestProxy.h"
 #import "TiLdapSearchRequestProxy.h"
-#import "TiFilesystemFileProxy.h"
+#import "TiLdapConnectRequestProxy.h"
 
+#import "TiFilesystemFileProxy.h"
 #import "TiUtils.h"
 
 @implementation TiLdapConnectionProxy
@@ -31,10 +32,7 @@
 
 -(void)_destroy
 {
-    if (_ld && _bound) {
-        ldap_unbind_ext(_ld, NULL, NULL);
-        _bound = NO;
-    }
+    [self disconnect:nil];
     self.certFile = nil;
     
     [super _destroy];
@@ -43,6 +41,11 @@
 -(LDAP*)ld
 {
     return _ld;
+}
+
+-(void)setld:(LDAP*)ld
+{
+    _ld = ld;
 }
 
 -(void)setBound:(BOOL)bound
@@ -57,65 +60,34 @@
 
 -(void)connect:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    
-    NSString *uri = [TiUtils stringValue:@"uri" properties:args def:@"ldap://127.0.0.1:389"];
-  
-    NSLog(@"[DEBUG] LDAP initialize with uri: %@", uri);
+    // Create the request that implements the bind and handles the callbacks
+    TiLdapConnectRequestProxy *request = [TiLdapConnectRequestProxy requestWithProxy:self];
+    [request sendRequest:args];
+}
 
-    int result = ldap_initialize(&_ld, [uri UTF8String]);
-    if (result == LDAP_SUCCESS) {
-        // Set protocol version to 3 by default
-        int protocolVersion = LDAP_VERSION3;
-        ldap_set_option(_ld, LDAP_OPT_PROTOCOL_VERSION, &protocolVersion);
-        
-        [self startTLS];
-        
-        // Apply all of the supported properties (need to do this after _ld is created)
-        [self setAsync];
-        [self setSizeLimit];
-        [self setTimeout];
-        
-        KrollCallback *successCallback = [args objectForKey:@"success"];
-        if (successCallback) {
-            NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   @"connect", @"method",
-                                   uri, @"uri",
-                                   nil];
-            [self _fireEventToListener:@"success" withObject:event listener:successCallback thisObject:nil];
-        }
-    } else {
-        KrollCallback *errorCallback = [args objectForKey:@"error"];
-        if (errorCallback) {
-            NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   @"connect", @"method",
-                                   NUMINT(result), @"error",
-                                   [NSString stringWithUTF8String:ldap_err2string(result)], @"message",
-                                   nil];
-            [self _fireEventToListener:@"error" withObject:event listener:errorCallback thisObject:nil];
-        }
+
+-(void)disconnect:(id)args
+{
+    if (_ld && _bound) {
+        ldap_unbind_ext(_ld, NULL, NULL);
+        _bound = NO;
     }
-    
-    return NUMINT(result);
+    _ld = NULL;
 }
 
 -(TiLdapRequestProxy*)simpleBind:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSDictionary)
-    
     // Create the request that implements the bind and handles the callbacks
-    TiLdapSimpleBindRequestProxy *request = [TiLdapSimpleBindRequestProxy requestWithProxyAndArgs:self args:args];
+    TiLdapSimpleBindRequestProxy *request = [TiLdapSimpleBindRequestProxy requestWithProxy:self];
     [request sendRequest:args];
     
     return request;
 }
 
 -(TiLdapRequestProxy*)saslBind:(id)args
-{
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    
+{    
     // Create the request that implements the bind and handles the callbacks
-    TiLdapSaslBindRequestProxy *request = [TiLdapSaslBindRequestProxy requestWithProxyAndArgs:self args:args];
+    TiLdapSaslBindRequestProxy *request = [TiLdapSaslBindRequestProxy requestWithProxy:self];
     [request sendRequest:args];
     
     return request;
@@ -123,21 +95,11 @@
 
 -(TiLdapRequestProxy*)search:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    
     // Create the delegate that implements the search and handles the callbacks
-    TiLdapSearchRequestProxy *request = [TiLdapSearchRequestProxy requestWithProxyAndArgs:self args:args];
+    TiLdapSearchRequestProxy *request = [TiLdapSearchRequestProxy requestWithProxy:self];
     [request sendRequest:args];
     
     return request;
-}
-
--(void)unBind:(id)args
-{
-    if (_ld && _bound) {
-        ldap_unbind_ext(_ld, NULL, NULL);
-        _bound = NO;
-    }
 }
 
 #pragma mark TLS Support Functions
@@ -204,17 +166,15 @@
     return NUMINT(0);
 }
 
--(NSNumber*)getTimeout
+-(NSNumber*)getTimeLimit
 {
-    struct timeval *timeVal;
-    int result = ldap_get_option(_ld, LDAP_OPT_TIMEOUT, &timeVal);
+    int timeLimit;
+    int result = ldap_get_option(_ld, LDAP_OPT_TIMELIMIT, &timeLimit);
     if (result == LDAP_SUCCESS) {
-        NSNumber *timeout = NUMINT((timeVal->tv_sec * 1000) + (timeVal->tv_usec / 1000));
-        ldap_memfree(timeVal);
-        return timeout;
+        return NUMINT(timeLimit);
     }
     
-    NSLog(@"[ERROR] Error retrieving timeout");
+    NSLog(@"[ERROR] Error retrieving timeLimit");
     
     return NUMINT(0);
 }
@@ -222,7 +182,7 @@
 -(void)setAsync
 {
     id optionValue = [self valueForUndefinedKey:@"async"];
-    if (optionValue != nil) {
+    if (!IS_NULL_OR_NIL(optionValue)) {
         int value = ([TiUtils boolValue:optionValue] == YES) ? 1 : 0;
         int result = ldap_set_option(_ld, LDAP_OPT_CONNECT_ASYNC, &value);
         if (result != LDAP_SUCCESS) {
@@ -234,7 +194,7 @@
 -(void)setSizeLimit
 {
     id optionValue = [self valueForUndefinedKey:@"sizeLimit"];
-    if (optionValue != nil) {
+    if (!IS_NULL_OR_NIL(optionValue)) {
         int value = [TiUtils intValue:optionValue];
         int result = ldap_set_option(_ld, LDAP_OPT_SIZELIMIT, &value);
         if (result != LDAP_SUCCESS) {
@@ -243,28 +203,32 @@
     }
 }
 
--(void)setTimeout
+-(void)setTimeLimit
 {
-    // Timeout is specified in milliseconds
-    id optionValue = [self valueForUndefinedKey:@"timeout"];
-    if (optionValue != nil) {
+    // TimeLimit is specified in seconds
+    id optionValue = [self valueForUndefinedKey:@"timeLimit"];
+    if (!IS_NULL_OR_NIL(optionValue)) {
         int value = [TiUtils intValue:optionValue];
         struct timeval timeVal;
     
-        // Negative values indicate no timeout is desired
+        // Negative values indicate no timeLimit is desired
         if (value < 0) {
             timeVal.tv_sec = -1;
             timeVal.tv_usec = -1;
         } else {
-            timeVal.tv_sec = value / 1000;
-            timeVal.tv_usec = (value % 1000) * 1000;
+            timeVal.tv_sec = value;
+            timeVal.tv_usec = 0;
         }
-        int result = ldap_set_option(_ld, LDAP_OPT_TIMEOUT, &timeVal);
+        // We set all three timeout/timelimits with this single value
+        int result = ldap_set_option(_ld, LDAP_OPT_TIMELIMIT, &timeVal);
+        if (result == LDAP_SUCCESS) {
+            result = ldap_set_option(_ld, LDAP_OPT_TIMEOUT, &timeVal);
+        }
         if (result == LDAP_SUCCESS) {
             result = ldap_set_option(_ld, LDAP_OPT_NETWORK_TIMEOUT, &timeVal);
         }
         if (result != LDAP_SUCCESS) {
-            NSLog(@"[ERROR] Error setting timeout to %d", value);
+            NSLog(@"[ERROR] Error setting timeLimit to %d", value);
         }
     }
 }

@@ -11,14 +11,14 @@
 @interface TiLdapRequestProxy : TiProxy {
 @protected
     TiLdapConnectionProxy *_connection;
+    NSString    *_method;
     KrollCallback   *_successCallback;
     KrollCallback   *_errorCallback;
     int _messageId;
-    NSString    *_method;
     LDAPMessage *_ldapMessage;
 }
 
--(id)initRequest:(NSString*)method connection:(TiProxy*)proxy args:(NSDictionary*)args;
+-(id)initRequest:(NSString*)method connection:(TiLdapConnectionProxy*)connection;
 -(BOOL)isConnectionValid;
 -(BOOL)isConnectionBound;
 -(void)handleSuccess:(id)result;
