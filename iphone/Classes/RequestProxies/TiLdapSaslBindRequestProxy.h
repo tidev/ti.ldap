@@ -22,7 +22,7 @@ struct my_ldap_auth
     MyLDAPAuth _auth;
 }
 
-+(id)requestWithProxyAndArgs:(TiLdapConnectionProxy*)connection args:(NSDictionary*)args;
++(id)requestWithProxy:(TiLdapConnectionProxy*)connection;
 
 -(int)execute:(NSDictionary*)args async:(BOOL)async;
 -(void)handleSuccess:(id)result;

@@ -36,8 +36,8 @@ public class SearchRequestProxy extends RequestProxy {
 	
 	private static final String LCAT = "LDAP";
 	
-	public SearchRequestProxy(ConnectionProxy connection, KrollDict args) {
-		super("search", connection, args);
+	public SearchRequestProxy(ConnectionProxy connection) {
+		super("search", connection);
 	}
 	
 	private class localAsyncSearchResultListener implements AsyncSearchResultListener
@@ -103,15 +103,24 @@ public class SearchRequestProxy extends RequestProxy {
 			return new LDAPResult(-1, ResultCode.UNAVAILABLE);
 		}
 		
-		String base = args.optString("base", "");
-		int scope = args.optInt("scope", LdapModule.SCOPE_DEFAULT);
+		String base = "";
+		if (args.containsKeyAndNotNull("base")) {
+			base = args.getString("base");
+		}
+		int scope = LdapModule.SCOPE_DEFAULT;
+        if (args.containsKeyAndNotNull("scope")) {
+        	scope = args.getInt("scope");
+        }
 		
 		// Use the same default value that openLDAP uses when a filter is not provided
-		String filter = args.optString("filter", "(objectClass=*)");
+        String filter = "(objectClass=*)";
+        if (args.containsKeyAndNotNull("filter")) {
+        	filter = args.getString("filter");
+        }
 
-        Object obj = args.get("attrs");
         ArrayList<String> attrs = null;
-        if (obj != null) {
+        if (args.containsKeyAndNotNull("attrs")) {
+            Object obj = args.get("attrs");
             if (obj.getClass().isArray()) {
                 Object[] arr = (Object[])obj;
                 attrs = new ArrayList<String>();
@@ -121,10 +130,21 @@ public class SearchRequestProxy extends RequestProxy {
             }
         }
 
-        Boolean attrsOnly = args.optBoolean("attrsOnly", false);
-        int sizeLimit = args.optInt("sizeLimit", 0);
-        int timeout = args.optInt("timeout", 0);	// ms
+        Boolean attrsOnly = false;
+        if (args.containsKeyAndNotNull("attrsOnly")) {
+        	attrsOnly = args.getBoolean("attrsOnly");
+        }
         
+        int sizeLimit = 0;
+        if (args.containsKeyAndNotNull("sizeLimit")) {
+        	sizeLimit = args.getInt("sizeLimit");
+        }
+        
+        int timeLimit = 0;
+        if (args.containsKeyAndNotNull("timeLimit")) {
+        	timeLimit = args.getInt("timeLimit");	// seconds
+        }
+
         try {
         	SearchRequest searchRequest;
         	if (async) {
@@ -134,11 +154,11 @@ public class SearchRequestProxy extends RequestProxy {
         	}
 	        searchRequest.setTypesOnly(attrsOnly);
 	        searchRequest.setSizeLimit(sizeLimit);
-	        searchRequest.setTimeLimitSeconds((timeout + 999) / 1000);
+	        searchRequest.setTimeLimitSeconds(timeLimit);
 	        if (attrs != null) {
 	            searchRequest.setAttributes(attrs);
 	        }
-	
+
 	        if (async) {
 	        	_ldapResult = null;
 	        	_asyncRequestId = _connection.getLd().asyncSearch(searchRequest);
@@ -150,11 +170,11 @@ public class SearchRequestProxy extends RequestProxy {
         }
         catch (LDAPSearchException lse) {
             Log.e(LCAT,"Error occurred in search: " + lse.toString());
-            return null;
+            return lse.toLDAPResult();
         }
         catch  (LDAPException e) {
         	Log.e(LCAT,"Error occurred in search: " + e.toString());
-        	return null;
+        	return e.toLDAPResult();
         }
 	}
 }

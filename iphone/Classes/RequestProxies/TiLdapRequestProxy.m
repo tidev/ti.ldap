@@ -10,14 +10,11 @@
 
 @implementation TiLdapRequestProxy
 
--(id)initRequest:(NSString*)method connection:(TiLdapConnectionProxy*)connection args:(NSDictionary*)args
+-(id)initRequest:(NSString*)method connection:(TiLdapConnectionProxy*)connection
 {
-    if (self = [super _initWithPageContext:[connection pageContext]]) {
+    if (self = [self _initWithPageContext:[connection pageContext]]) {
         _method = [method retain];
         _connection = [connection retain];
-        _successCallback = [[args objectForKey:@"success"] retain];
-        _errorCallback = [[args objectForKey:@"error"] retain];
-        _messageId = -1;
     }
     
     return self;
@@ -26,9 +23,9 @@
 -(void)_destroy
 {
     RELEASE_TO_NIL(_method);
+    RELEASE_TO_NIL(_connection);
     RELEASE_TO_NIL(_successCallback);
     RELEASE_TO_NIL(_errorCallback);
-    RELEASE_TO_NIL(_connection);
     
     if (_ldapMessage) {
         ldap_msgfree(_ldapMessage);
@@ -128,12 +125,22 @@
     return LDAP_SUCCESS;
 }
 
--(void)sendRequest:(NSDictionary *)args
+-(void)sendRequest:(id)args
 {
-    // First make sure that we have a valid connection
-    if (![self isConnectionValid]) {
-        return;
-    }
+    enum Args {
+        kArgOptions = 0,
+        kArgSuccess,
+        kArgError,
+        kArgNumArguments
+    };
+    
+    ENSURE_ARRAY(args)
+    ENSURE_ARG_OR_NIL_AT_INDEX(_successCallback, args, kArgSuccess, KrollCallback);
+    ENSURE_ARG_OR_NIL_AT_INDEX(_errorCallback, args, kArgError, KrollCallback);
+    ENSURE_ARG_AT_INDEX(args, args, kArgOptions, NSDictionary);
+    
+    [_successCallback retain];
+    [_errorCallback retain];
     
     // Determine if this is a synchronous or asynchronous request
     BOOL async = [TiUtils boolValue:@"async" properties:args def:NO];
