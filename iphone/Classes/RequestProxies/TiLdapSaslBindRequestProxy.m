@@ -12,9 +12,9 @@
 
 @implementation TiLdapSaslBindRequestProxy
 
-+(id)requestWithProxyAndArgs:(TiLdapConnectionProxy*)connection args:(NSDictionary*)args
++(id)requestWithProxy:(TiLdapConnectionProxy*)connection
 {
-    return [[[self alloc] initRequest:@"saslBind" connection:connection args:args] autorelease];
+    return [[[self alloc] initRequest:@"saslBind" connection:connection] autorelease];
 }
 
 -(void)_destroy
@@ -58,7 +58,6 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
     if (!(ld))
         return(LDAP_PARAM_ERROR);
     
-    NSLog(@"      entering my_ldap_sasl_interact_proc()");
     for(interact = sin; (interact->id != SASL_CB_LIST_END); interact++)
     {
         interact->result = NULL;
@@ -66,38 +65,30 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
         switch( interact->id )
         {
             case SASL_CB_GETREALM:
-                NSLog(@"         processing SASL_CB_GETREALM (%s)", ldap_inst->realm ? ldap_inst->realm : "");
                 interact->result = ldap_inst->realm ? ldap_inst->realm : "";
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_AUTHNAME:
-                NSLog(@"         processing SASL_CB_AUTHNAME (%s)", ldap_inst->authenticationId ? ldap_inst->authenticationId : "");
                 interact->result = ldap_inst->authenticationId ? ldap_inst->authenticationId : "";
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_PASS:
-                NSLog(@"         processing SASL_CB_PASS (%s)", ldap_inst->passwd ? ldap_inst->passwd : "");
                 interact->result = ldap_inst->passwd ? ldap_inst->passwd : "";
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_USER:
-                NSLog(@"         processing SASL_CB_USER (%s)", ldap_inst->authorizationId ? ldap_inst->authorizationId : "");
                 interact->result = ldap_inst->authorizationId ? ldap_inst->authorizationId : "";
                 interact->len    = strlen( interact->result );
                 break;
             case SASL_CB_NOECHOPROMPT:
-                NSLog(@"         processing SASL_CB_NOECHOPROMPT");
                 break;
             case SASL_CB_ECHOPROMPT:
-                NSLog(@"         processing SASL_CB_ECHOPROMPT");
                 break;
             default:
-                NSLog(@"         I don't know how to process this.");
                 break;
         };
     };
-    NSLog(@"      exiting my_ldap_sasl_interact_proc()");
-    
+
     return(LDAP_SUCCESS);
 };
 
@@ -131,13 +122,6 @@ int ldap_sasl_interact(LDAP *ld, unsigned flags, void *defaults,
     _auth.authorizationId = [self getAuthValue:@"authorizationId" args:args option:LDAP_OPT_X_SASL_AUTHZID];
     _auth.authenticationId = [self getAuthValue:@"authenticationId" args:args option:LDAP_OPT_X_SASL_AUTHCID];
     
-    NSLog(@"[DEBUG] LDAP saslBind with:");
-    NSLog(@"[DEBUG]      Passwd:          %s", _auth.passwd   ? _auth.passwd   : "(NULL)");
-    NSLog(@"[DEBUG]      Mech:            %s", _auth.mech     ? _auth.mech     : "(NULL)");
-    NSLog(@"[DEBUG]      Realm:           %s", _auth.realm    ? _auth.realm    : "(NULL)");
-    NSLog(@"[DEBUG]      AuthorizationId: %s", _auth.authorizationId  ? _auth.authorizationId : "(NULL)");
-    NSLog(@"[DEBUG]      AuthenticationId %s", _auth.authenticationId ? _auth.authenticationId : "(NULL)");
-
     /*
      
      From the UnboundID documentation:

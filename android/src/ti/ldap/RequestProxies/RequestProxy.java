@@ -29,19 +29,19 @@ public class RequestProxy extends KrollProxy {
 	
 	private static final String LCAT = "LDAP";
 	
-	private final String _method;
-	protected final KrollFunction _successCallback;
-	protected final KrollFunction _errorCallback;
 	protected final ConnectionProxy _connection;
+	private final String _method;
+	protected KrollFunction _successCallback;
+	protected KrollFunction _errorCallback;
 	protected AsyncRequestID _asyncRequestId = null;
 	protected LDAPResult _ldapResult;
 	
-	public RequestProxy(final String method, final ConnectionProxy connection, final KrollDict args) {
+	public RequestProxy(final String method, final ConnectionProxy connection) {
 		super();
 		_method = method;
 		_connection = connection;
-		_successCallback = (KrollFunction)args.get("success");
-		_errorCallback = (KrollFunction)args.get("error");
+		_successCallback = null;
+		_errorCallback = null;
 	}
 	
 	public Boolean isConnectionValid()
@@ -98,12 +98,11 @@ public class RequestProxy extends KrollProxy {
 		return new LDAPResult(-1, ResultCode.SUCCESS);
 	}
 	
-	public void sendRequest(KrollDict args)
-	{
-		// First make sure that we have a valid connection
-		if (!isConnectionValid()) {
-			return;
-		}
+	public void sendRequest(final HashMap<String, Object> hm, final KrollFunction success, final KrollFunction error)
+	{		
+		KrollDict args = new KrollDict(hm);
+		_successCallback = success;
+		_errorCallback = error;
 		
 		// Determine if this is a synchronous or asynchronous request
 		Boolean async = args.optBoolean("async", false);
@@ -112,7 +111,7 @@ public class RequestProxy extends KrollProxy {
 		LDAPResult result = execute(args, async);
 		
 		if (async && (_asyncRequestId != null)) {
-			Log.i(LCAT, "Successfully initiated asynchronous request");
+			Log.d(LCAT, "Successfully initiated asynchronous request");
 		} else if (result == null) {
 			handleError(-1, "Unknown error occurred");
 		} else if (result.getResultCode() == ResultCode.SUCCESS) {

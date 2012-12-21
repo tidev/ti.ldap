@@ -10,9 +10,9 @@
 
 @implementation TiLdapSimpleBindRequestProxy
 
-+(id)requestWithProxyAndArgs:(TiLdapConnectionProxy*)connection args:(NSDictionary*)args
++(id)requestWithProxy:(TiLdapConnectionProxy*)connection
 {
-    return [[[self alloc] initRequest:@"simpleBind" connection:connection args:args] autorelease];
+    return [[[self alloc] initRequest:@"simpleBind" connection:connection] autorelease];
 }
 
 // Override the handleSuccess method so that we can set the bound state of the connection
@@ -26,9 +26,7 @@
 {   
     NSString *dn = [TiUtils stringValue:@"dn" properties:args def:nil];
     NSString *passwd = [TiUtils stringValue:@"password" properties:args def:nil];
-    
-    NSLog(@"[DEBUG] LDAP simpleBind with dn: %@", dn);
-    
+
     /*
      
      From the UnboundID documentation:

@@ -28,8 +28,8 @@ public class SaslBindRequestProxy extends RequestProxy {
 	
 	private static final String LCAT = "LDAP";
 	
-	public SaslBindRequestProxy(ConnectionProxy connection, KrollDict args) {
-		super("saslBind", connection, args);
+	public SaslBindRequestProxy(ConnectionProxy connection) {
+		super("saslBind", connection);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class SaslBindRequestProxy extends RequestProxy {
         }
         catch (LDAPException e) {
             Log.e(LCAT, "Error occurred in SASL bind: " + e.toString());
-            return null;
+            return e.toLDAPResult();
         }
 	}
 }

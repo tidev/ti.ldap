@@ -25,8 +25,8 @@ public class SimpleBindRequestProxy extends RequestProxy {
 	
 	private static final String LCAT = "LDAP";
 	
-	public SimpleBindRequestProxy(ConnectionProxy connection, KrollDict args) {
-		super("simpleBind", connection, args);
+	public SimpleBindRequestProxy(ConnectionProxy connection) {
+		super("simpleBind", connection);
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class SimpleBindRequestProxy extends RequestProxy {
         }
         catch (LDAPException e) {
             Log.e(LCAT, "Error occurred in simple bind: " + e.toString());
-            return null;
+            return e.toLDAPResult();
         }
 	}
 }

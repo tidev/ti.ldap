@@ -13,32 +13,32 @@ ENABLE THREAD-SAFETY FOR ASYNCHRONOUS CODE
 Settings for SASL:
 
 /* Define to 1 if you have the <sasl.h> header file. */
-//BUGBUG#undef HAVE_SASL_H
+//TITANIUM#undef HAVE_SASL_H
 #define HAVE_SASL_H 1
 
 /* Define to 1 if you have the <sasl/sasl.h> header file. */
-//BUGBUG#undef HAVE_SASL_SASL_H
+//TITANIUM#undef HAVE_SASL_SASL_H
 
 Settings for OpenSSL:
 
 /* define if you have OpenSSL */
-//BUGBUG#undef HAVE_OPENSSL
+//TITANIUM#undef HAVE_OPENSSL
 #define HAVE_OPENSSL 1
 
 /* Define to 1 if you have the <openssl/bn.h> header file. */
-//BUGBUG#undef HAVE_OPENSSL_BN_H
+//TITANIUM#undef HAVE_OPENSSL_BN_H
 #define HAVE_OPENSSL_BN_H 1
 
 /* define if you have OpenSSL with CRL checking capability */
-//BUGBUG#undef HAVE_OPENSSL_CRL
+//TITANIUM#undef HAVE_OPENSSL_CRL
 #define HAVE_OPENSSL_CRL 1
 
 /* Define to 1 if you have the <openssl/crypto.h> header file. */
-//BUGBUG#undef HAVE_OPENSSL_CRYPTO_H
+//TITANIUM#undef HAVE_OPENSSL_CRYPTO_H
 #define HAVE_OPENSSL_CRYPTO_H 1
 
 /* Define to 1 if you have the <openssl/ssl.h> header file. */
-//BUGBUG#undef HAVE_OPENSSL_SSL_H
+//TITANIUM#undef HAVE_OPENSSL_SSL_H
 #define HAVE_OPENSSL_SSL_H 1
 
 

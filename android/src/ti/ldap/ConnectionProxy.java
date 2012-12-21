@@ -16,6 +16,7 @@ import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiFileProxy;
 import org.appcelerator.titanium.util.TiConvert;
 
+import ti.ldap.RequestProxies.ConnectRequestProxy;
 import ti.ldap.RequestProxies.RequestProxy;
 import ti.ldap.RequestProxies.SaslBindRequestProxy;
 import ti.ldap.RequestProxies.SearchRequestProxy;
@@ -24,8 +25,6 @@ import ti.ldap.RequestProxies.SimpleBindRequestProxy;
 import android.util.Log;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
-import java.net.URI;
-import java.net.URISyntaxException;
 import javax.net.SocketFactory;
 
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -34,6 +33,7 @@ import com.unboundid.ldap.sdk.LDAPConnectionOptions;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 import com.unboundid.util.ssl.TrustStoreTrustManager;
+import com.unboundid.ldap.sdk.LDAPURL;
 
 
 @Kroll.proxy(creatableInModule=LdapModule.class, propertyAccessors = { "useTLS", "certFile" })
@@ -57,31 +57,23 @@ public class ConnectionProxy extends KrollProxy
 	@Override
 	public void release()
 	{
-		close();
+		disconnect();
 		super.release();
-	}
-	
-	private void close() {
-		if (_ld != null) {
-			_ld.close();
-			_ld = null;
-			_bound = false;
-		}
-	}
-
-	public LDAPConnectionOptions options()
-	{
-		return _options;
-	}
-	
-	public void setBound(Boolean bound)
-	{
-		_bound = bound;
 	}
 	
 	public LDAPConnection getLd()
 	{
 		return _ld;
+	}
+	
+	public void setLd(LDAPConnection ld)
+	{
+		_ld = ld;
+	}
+	
+	public void setBound(Boolean bound)
+	{
+		_bound = bound;
 	}
 
 	public Boolean isBound()
@@ -89,97 +81,60 @@ public class ConnectionProxy extends KrollProxy
 		return ((_ld != null) && _bound);
 	}
 	
+	public LDAPConnectionOptions options()
+	{
+		return _options;
+	}
+	
 	// Public proxy methods
 	
     @Kroll.method
-    public void connect(HashMap hm)
+    public void connect(HashMap hm, @Kroll.argument(optional=true) KrollFunction success, @Kroll.argument(optional=true) KrollFunction error)
     {
-        KrollDict args = new KrollDict(hm);
-
-        int port = 389;
-        String host = "";
-        try {
-            URI uri = new URI(args.optString("uri", "ldap://127.0.0.1"));
-            // NOTE: Need to strip off scheme
-            host = uri.getHost();
-            port = uri.getPort();
-            if (port == -1) {
-                port = 389;
-            }
-        }
-        catch (URISyntaxException e) {
-            Log.e(LCAT, "Invalid uri specified: " + e.toString());
-            return;
-        }
-
-        Log.d(LCAT, "LDAP initialize with host: " + host + " and port: " + port);
-
-        SocketFactory socketFactory = startTLS();
-
-		HashMap<String,Object> event = new HashMap<String,Object>();
-		event.put("method", "connect");
-			
-		try {
-       		_ld = new LDAPConnection(socketFactory, _options, host, port);
-       		KrollFunction successCallback = (KrollFunction)args.get("success");
-       		if (successCallback != null) {
-    			event.put("uri", _ld.getConnectedAddress() + ":" + _ld.getConnectedPort());
-    			successCallback.callAsync(getKrollObject(), event);
-    			return;
-       		}
-        }
-        catch (LDAPException e) {
-            Log.e(LCAT, "Error occurred during LDAP initialization: " + e.toString());    
-	        KrollFunction errorCallback = (KrollFunction)args.get("error");
-	        if (errorCallback != null) {
-	        	event.put("error", e.getResultCode().intValue());
-	        	event.put("message", e.getMessage());
-	        	errorCallback.callAsync(getKrollObject(), event);
-	        }
-        }
+    	// Create the request that implements the connection and handles the callbacks
+    	ConnectRequestProxy request = new ConnectRequestProxy(this);
+    	request.sendRequest(hm, success, error);
     }
-    
+    	   
+	@Kroll.method
+	public void disconnect()
+	{
+		if (_ld != null) {
+			_ld.close();
+			_ld = null;
+			_bound = false;
+		}
+	}
+	
     @Kroll.method
-    public RequestProxy simpleBind(HashMap hm)
+    public RequestProxy simpleBind(HashMap hm, @Kroll.argument(optional=true) KrollFunction success, @Kroll.argument(optional=true) KrollFunction error)
     {
-    	KrollDict args = new KrollDict(hm);
-    	
     	// Create the request that implements the bind and handles the callbacks
-    	SimpleBindRequestProxy request = new SimpleBindRequestProxy(this, args);
-    	request.sendRequest(args);
+    	SimpleBindRequestProxy request = new SimpleBindRequestProxy(this);
+    	request.sendRequest(hm, success, error);
     	
     	return request;
     }
 	
     @Kroll.method
-    public RequestProxy saslBind(HashMap hm)
+    public RequestProxy saslBind(HashMap hm, @Kroll.argument(optional=true) KrollFunction success, @Kroll.argument(optional=true) KrollFunction error)
     {
-    	KrollDict args = new KrollDict(hm);
-    	
     	// Create the request that implements the bind and handles the callbacks
-    	SaslBindRequestProxy request = new SaslBindRequestProxy(this, args);
-    	request.sendRequest(args);
+    	SaslBindRequestProxy request = new SaslBindRequestProxy(this);
+    	request.sendRequest(hm, success, error);
     	
     	return request;
     }
     
     @Kroll.method
-    public SearchRequestProxy search(HashMap hm)
+    public SearchRequestProxy search(HashMap hm, @Kroll.argument(optional=true) KrollFunction success, @Kroll.argument(optional=true) KrollFunction error)
     {
-    	KrollDict args = new KrollDict(hm);
-    	
     	// Create the request that implements the bind and handles the callbacks
-    	SearchRequestProxy request = new SearchRequestProxy(this, args);
-    	request.sendRequest(args);
+    	SearchRequestProxy request = new SearchRequestProxy(this);
+    	request.sendRequest(hm, success, error);
     	
     	return request;
     }
-    
-	@Kroll.method
-	public void unBind()
-	{
-		close();
-	}
 	
 	// --- TLS Support Functions
 	
@@ -201,7 +156,7 @@ public class ConnectionProxy extends KrollProxy
 		return filePath;
 	}
 	
-	private SocketFactory startTLS()
+	public SocketFactory startTLS()
 	{
 		SSLUtil sslUtil;
 		SocketFactory socketFactory = null;
@@ -212,16 +167,16 @@ public class ConnectionProxy extends KrollProxy
 	        	String certFilePath = null;
 	        	if (hasProperty("certFile")) {
 	        		certFilePath = getFilePath(getProperty("certFile"));
-	        		Log.i(LCAT, "Using certificate: " + certFilePath);
+	        		Log.d(LCAT, "Using certificate: " + certFilePath);
 	        		sslUtil = new SSLUtil(new TrustStoreTrustManager(certFilePath));
 	        	} else {
 	        		sslUtil = new SSLUtil(new TrustAllTrustManager());
 	        	}
 	        	
         		try {
-        			Log.i(LCAT, "Initializing TLS");
+        			Log.d(LCAT, "Initializing TLS");
 					socketFactory = sslUtil.createSSLSocketFactory();
-					Log.i(LCAT, "TLS initialized");
+					Log.d(LCAT, "TLS initialized");
 				} catch (GeneralSecurityException e) {
 					Log.e(LCAT, "Error initializing TLS: " + e.toString());
 				}
@@ -258,19 +213,19 @@ public class ConnectionProxy extends KrollProxy
 	}
 	
 	@Kroll.setProperty
-	public void setTimeout(int value)
+	public void setTimeLimit(int value)
 	{
-		// Negative values indicate no timeout is desired
+		// Negative values indicate no timeLimit is desired
 		if (value < 0) {
 			value = 0;
 		}
-		_options.setConnectTimeoutMillis(value);
-		_options.setResponseTimeoutMillis(value);
+		_options.setConnectTimeoutMillis(value * 1000);
+		_options.setResponseTimeoutMillis(value * 1000);
 	}
 	
 	@Kroll.getProperty
-	public int getTimeout()
+	public int getTimeLimit()
 	{
-		return _options.getConnectTimeoutMillis();
+		return _options.getConnectTimeoutMillis() / 1000;
 	}    
 }

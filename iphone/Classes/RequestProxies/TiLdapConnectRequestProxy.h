@@ -7,12 +7,11 @@
 
 #import "TiLdapRequestProxy.h"
 
-@interface TiLdapSimpleBindRequestProxy : TiLdapRequestProxy {
+@interface TiLdapConnectRequestProxy : TiLdapRequestProxy {
 }
 
 +(id)requestWithProxy:(TiLdapConnectionProxy*)connection;
 
 -(int)execute:(NSDictionary*)args async:(BOOL)async;
--(void)handleSuccess:(id)result;
 
 @end
