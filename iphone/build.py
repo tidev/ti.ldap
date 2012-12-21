@@ -149,7 +149,6 @@ def zip_dir(zf,dir,basepath,ignore=[]):
 			if file in ignoreFiles: continue
 			e = os.path.splitext(file)
 			if len(e) == 2 and e[1] == '.pyc': continue
-			if len(e) == 2 and e[1] == '.js': continue
 			from_ = os.path.join(root, file)
 			to_ = from_.replace(dir, basepath, 1)
 			zf.write(from_, to_)
@@ -196,9 +195,9 @@ def package_module(manifest,mf,config):
 			for file, html in doc.iteritems():
 				filename = string.replace(file,'.md','.html')
 				zf.writestr('%s/documentation/%s'%(modulepath,filename),html)
-	for dn in ('../assets','../example','platform'):
-	  if os.path.exists(dn):
-		  zip_dir(zf,dn,'%s/%s' % (modulepath,dn),['README'])
+	zip_dir(zf,'../example','%s/example' % modulepath,['README'])
+	zip_dir(zf,'../assets','%s/assets' % modulepath,['README'])
+	zip_dir(zf,'platform','%s/platform' % modulepath,['README'])
 	zf.write('../LICENSE','%s/LICENSE' % modulepath)
 	zf.write('module.xcconfig','%s/module.xcconfig' % modulepath)
 	exports_file = 'metadata.json'
