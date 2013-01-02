@@ -2,8 +2,6 @@
  * View for displaying entries from the search result
  */
 
-var u = Ti.Android != undefined ? 'dp' : 0;
-
 var searchResult = null;
 var table = null;
 
@@ -27,7 +25,7 @@ exports.create = function(win) {
 	win.add(table);
 	table.addEventListener('click', function(e) {
 		if (e.row.hasChild) {
-        	require('navigator').push({
+        	require('utility/navigator').push({
         		entry: e.row.entry,
         		viewName: 'attributes'
         	});
@@ -51,6 +49,7 @@ function populateTable() {
 
 	var tableRows = [];
 	if (searchResult) {
+		// Iterate over the entries in the search result
 		var entry = searchResult.firstEntry();
 		while (entry) {
 			tableRows.push(createRow(entry));
