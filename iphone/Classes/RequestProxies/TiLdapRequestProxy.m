@@ -95,8 +95,12 @@
         case LDAP_RES_SEARCH_RESULT: {
             //NOTE: DO NOT FREE THE MESSAGE
             int rc = ldap_parse_result(_connection.ld, _ldapMessage, &err, NULL, NULL, NULL, NULL, 0 );
+            //NOTE: Return code can be successful even when an error occurred; so check both values
             if ((rc == LDAP_SUCCESS) && (err == LDAP_SUCCESS)) {
                 [self handleSuccess:nil];
+            } else {
+                [self handleError:err
+                     errorMessage:[NSString stringWithUTF8String:ldap_err2string(err)]];
             }
             break;
         }

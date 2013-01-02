@@ -2,10 +2,11 @@
  * View for specifying bind information
  */
 
-var u = Ti.Android != undefined ? 'dp' : 0;
+var platform = require('utility/platform');
 
 var connection = null;
 var loading = null;
+var u = platform.u;
 
 exports.initialize = function(viewInfo) {
 	// The connection property contains the connection proxy
@@ -62,15 +63,7 @@ exports.create = function(win) {
     	});
     });
     
-	loading = Ti.UI.createActivityIndicator({
-		height: 50, width: 50,
-		color: 'white',
-		backgroundColor: 'black', borderRadius: 10,
-		message: 'Binding...'
-	});
-	if (Ti.Platform.name === 'iPhone OS') {
-		win.add(loading);
-	}
+	loading = platform.addActivityIndicator(win, "Binding...");
 };
 
 function doBind(data) {
@@ -78,7 +71,7 @@ function doBind(data) {
 	connection.simpleBind(data,
         function() {
         	loading.hide();
-        	require('navigator').push({
+        	require('utility/navigator').push({
         		viewName: 'search',
         		connection: connection
         	});

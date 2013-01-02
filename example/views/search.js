@@ -2,17 +2,17 @@
  * View for specifying search information
  */
 
-var u = Ti.Android != undefined ? 'dp' : 0;
+var ldap = require('ti.ldap');	
+var platform = require('utility/platform');
 
-var connection = null;
 var searchRequest = null;
-var ldap = null;
+var connection = null;
+var loading = null;
+var u = platform.u;
 
 exports.initialize = function(viewInfo) {
 	// The connection property contains the connection proxy
 	connection = viewInfo.connection;
-	// Load the LDAP module (needed to get constant values for search)
-	ldap = require('ti.ldap');	
 };
 
 exports.cleanup = function() {
@@ -21,7 +21,7 @@ exports.cleanup = function() {
 		searchRequest = null;
 	}
 	connection = null;
-	ldap = null;
+	loading = null;
 };
 
 exports.create = function(win) {
@@ -111,15 +111,7 @@ exports.create = function(win) {
     	});
     });
     
-	loading = Ti.UI.createActivityIndicator({
-		height: 50, width: 50,
-		color: 'white',
-		backgroundColor: 'black', borderRadius: 10,
-		message: 'Searching...'
-	});
-	if (Ti.Platform.name === 'iPhone OS') {
-		win.add(loading);
-	}
+	loading = platform.addActivityIndicator(win, "Searching...");
 };
 
 function doSearch(data) {
@@ -128,7 +120,7 @@ function doSearch(data) {
    		function(e) {
     		loading.hide();
     		searchRequest = null;
-    		require('navigator').push({
+    		require('utility/navigator').push({
     			searchResult: e.result,
     			viewName: 'entries'
     		})

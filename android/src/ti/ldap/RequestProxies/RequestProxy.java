@@ -90,7 +90,11 @@ public class RequestProxy extends KrollProxy {
 	
 	public void handleError(LDAPResult result)
 	{
-		handleError(result.getResultCode().intValue(), result.getDiagnosticMessage());
+		String message = result.getDiagnosticMessage();
+		if (message == null) {
+			message = result.getResultCode().getName();
+		}
+		handleError(result.getResultCode().intValue(), message);
 	}
 	
 	public LDAPResult execute(KrollDict args, Boolean async)

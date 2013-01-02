@@ -44,13 +44,11 @@ public class SearchRequestProxy extends RequestProxy {
 	{
 		private static final long serialVersionUID = 1L;
 		
-		private final SearchRequestProxy _proxy;
 		private final List<SearchResultEntry> _entryList;
 		private final List<SearchResultReference> _referenceList;
 		
 		public localAsyncSearchResultListener(SearchRequestProxy proxy) {
 			super();
-			_proxy = proxy;
 			_entryList = new ArrayList<SearchResultEntry>();
 			_referenceList = new ArrayList<SearchResultReference>();
 		}
@@ -63,7 +61,7 @@ public class SearchRequestProxy extends RequestProxy {
 			if (rc != ResultCode.SUCCESS) {
 				handleError(searchResult);
 			} else {
-				_proxy._ldapResult = new SearchResult(searchResult.getMessageID(),
+				_ldapResult = new SearchResult(searchResult.getMessageID(),
 						searchResult.getResultCode(),
 						searchResult.getDiagnosticMessage(),
 						searchResult.getMatchedDN(),
@@ -73,7 +71,7 @@ public class SearchRequestProxy extends RequestProxy {
 						_entryList.size(),
 						_referenceList.size(),
 						searchResult.getResponseControls());
-				_proxy.handleSuccess(null);
+				handleSuccess(null);
 			}
 		}
 

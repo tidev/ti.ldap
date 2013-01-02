@@ -2,25 +2,23 @@
  * View for displaying attributes for the selected entry
  */
 
-var u = Ti.Android != undefined ? 'dp' : 0;
+var platform = require('utility/platform');
 
 var entry = null;
 var table = null;
+var u = platform.u;
 
-exports.initialize = function (viewInfo)
-{
+exports.initialize = function (viewInfo) {
 	// The entry property contains the selected entry proxy
 	entry = viewInfo.entry;
 };
 
-exports.cleanup = function ()
-{
+exports.cleanup = function () {
 	entry = null;
 	table = null;
 };
 
-exports.create = function (win)
-{
+exports.create = function (win) {
 	win.title = 'Attributes';
 
 	table = Ti.UI.createTableView({
@@ -57,6 +55,7 @@ function populateTable() {
 
 	var tableRows = [];
 	if (entry) {
+		// Iterate over all of the attributes for the entry
 		var attribute = entry.firstAttribute();
 		while (attribute) {
 			// Retrieve the attribute values -- this code assumes that each
