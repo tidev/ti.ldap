@@ -2,19 +2,17 @@
  * View for specifying connection information
  */
 
-var u = Ti.Android != undefined ? 'dp' : 0;
+var ldap = require('ti.ldap');
+var platform = require('utility/platform');
 
 var connection = null;
-var ldap = null;
 var loading = null;
+var u = platform.u;
 
 exports.initialize = function() {
-	// Load the LDAP module
-	ldap = require('ti.ldap');	
 };
 
 exports.cleanup = function() {
-	ldap = null;
 	connection = null;
 	loading = null;
 };
@@ -51,15 +49,7 @@ exports.create = function(win) {
     	});
     });
     
-	loading = Ti.UI.createActivityIndicator({
-		height: 50, width: 50,
-		color: 'white',
-		backgroundColor: 'black', borderRadius: 10,
-		message: 'Connecting...'
-	});
-	if (Ti.Platform.name === 'iPhone OS') {
-		win.add(loading);
-	}
+	loading = platform.addActivityIndicator(win, "Connecting...");
 };
 
 function doConnect(data) {
@@ -71,7 +61,7 @@ function doConnect(data) {
    	connection.connect(data,
    		function() {
         	loading.hide();
-         	require('navigator').push({
+         	require('utility/navigator').push({
         		viewName: 'bind',
         		connection: connection
         	});
