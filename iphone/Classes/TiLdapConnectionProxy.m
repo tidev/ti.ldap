@@ -16,7 +16,7 @@
 
 @implementation TiLdapConnectionProxy
 
-@synthesize useTLS, certFile = _certFile;
+@synthesize useTLS, certFile;
 
 -(id)init
 {
@@ -118,7 +118,7 @@
 
 -(void)startTLS
 {
-    if (useTLS) {
+    if (self.useTLS) {
         if (self.certFile) {
             NSString *certFilePath = [self getFilePath:self.certFile];
             NSLog(@"[DEBUG] Using certificate: %@", certFilePath);

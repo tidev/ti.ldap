@@ -88,7 +88,6 @@
     }
     
     return result;
-    
 }
 
 -(NSString*)nextAttribute:(id)args
@@ -104,7 +103,6 @@
     }
     
     return result;
-    
 }
 
 -(NSArray*)getValues:(id)arg
@@ -128,7 +126,6 @@
     }
     
     return result;
-    
 }
 
 -(NSArray*)getValuesLen:(id)arg
