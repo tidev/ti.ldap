@@ -60,6 +60,16 @@ public class ConnectionProxy extends KrollProxy
 		disconnect();
 		super.release();
 	}
+
+	@Override
+	public void handleCreationDict(KrollDict props)
+	{
+		super.handleCreationDict(props);
+
+        if (!props.containsKey("useTLS")) {
+        	setProperty("useTLS", false);
+        }
+	}
 	
 	public LDAPConnection getLd()
 	{
@@ -188,18 +198,6 @@ public class ConnectionProxy extends KrollProxy
 	
     // --- Public Proxy Properties
     
-	@Kroll.setProperty
-	public void setAsync(Boolean value)
-	{
-		_options.setUseSynchronousMode(!value);
-	}
-	
-	@Kroll.getProperty
-	public Boolean getAsync()
-	{
-		return !_options.useSynchronousMode();
-	}
-	
 	@Kroll.setProperty
 	public void setSizeLimit(int value)
 	{

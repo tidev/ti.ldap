@@ -16,15 +16,12 @@
 
 @implementation TiLdapConnectionProxy
 
-@synthesize useTLS, certFile;
-
 -(id)init
 {
     if (self = [super init]) {
         _ld = NULL;
         _bound = NO;
-        self.useTLS = NO;
-        self.certFile = nil;
+        [self initializeProperty:@"useTLS" defaultValue:NUMBOOL(NO)];
     }
     
     return self;
@@ -33,7 +30,6 @@
 -(void)_destroy
 {
     [self disconnect:nil];
-    self.certFile = nil;
     
     [super _destroy];
 }
@@ -118,9 +114,11 @@
 
 -(void)startTLS
 {
-    if (self.useTLS) {
-        if (self.certFile) {
-            NSString *certFilePath = [self getFilePath:self.certFile];
+    bool useTLS = [TiUtils boolValue:[self valueForUndefinedKey:@"useTLS"] def:NO];
+    if (useTLS) {
+    	id certFile = [self valueForUndefinedKey:@"certFile"];
+        if (!IS_NULL_OR_NIL(certFile)) {
+            NSString *certFilePath = [self getFilePath:certFile];
             NSLog(@"[DEBUG] Using certificate: %@", certFilePath);
             ldap_set_option(_ld, LDAP_OPT_X_TLS_CERTFILE, [certFilePath UTF8String]);
         }
@@ -140,55 +138,32 @@
 
 #pragma mark Public Proxy Properties
 
--(NSNumber*)getAsync
-{
-    int async;
-    int result = ldap_get_option(_ld, LDAP_OPT_CONNECT_ASYNC, &async);
-    if (result == LDAP_SUCCESS) {
-        return (async == 0) ? NUMBOOL(NO) : NUMBOOL(YES);
-    }
-    
-    NSLog(@"[ERROR] Error retrieving async");
-    
-    return NUMBOOL(NO);
-}
-
 -(NSNumber*)getSizeLimit
 {
-    int sizeLimit;
-    int result = ldap_get_option(_ld, LDAP_OPT_SIZELIMIT, &sizeLimit);
-    if (result == LDAP_SUCCESS) {
-        return NUMINT(sizeLimit);
+    id value = [self valueForUndefinedKey:@"sizeLimit"];
+    if (IS_NULL_OR_NIL(value)) {
+        int sizeLimit;
+        int result = ldap_get_option(_ld, LDAP_OPT_SIZELIMIT, &sizeLimit);
+        if (result == LDAP_SUCCESS) {
+            value = NUMINT(sizeLimit);
+        }
     }
     
-    NSLog(@"[ERROR] Error retrieving sizeLimit");
-    
-    return NUMINT(0);
+    return value;
 }
 
 -(NSNumber*)getTimeLimit
 {
-    int timeLimit;
-    int result = ldap_get_option(_ld, LDAP_OPT_TIMELIMIT, &timeLimit);
-    if (result == LDAP_SUCCESS) {
-        return NUMINT(timeLimit);
-    }
-    
-    NSLog(@"[ERROR] Error retrieving timeLimit");
-    
-    return NUMINT(0);
-}
-
--(void)setAsync
-{
-    id optionValue = [self valueForUndefinedKey:@"async"];
-    if (!IS_NULL_OR_NIL(optionValue)) {
-        int value = ([TiUtils boolValue:optionValue] == YES) ? 1 : 0;
-        int result = ldap_set_option(_ld, LDAP_OPT_CONNECT_ASYNC, &value);
-        if (result != LDAP_SUCCESS) {
-            NSLog(@"[ERROR] Error setting async to %d", value);
+    id value = [self valueForUndefinedKey:@"timeLimit"];
+    if (IS_NULL_OR_NIL(value)) {
+        int timeLimit;
+        int result = ldap_get_option(_ld, LDAP_OPT_TIMELIMIT, &timeLimit);
+        if (result == LDAP_SUCCESS) {
+            value = NUMINT(timeLimit);
         }
     }
+    
+    return value;
 }
 
 -(void)setSizeLimit
