@@ -72,7 +72,9 @@ public class RequestProxy extends KrollProxy {
 		if (_successCallback != null) {
 			HashMap<String,Object> event = new HashMap<String,Object>();
 			event.put("method", _method);
-			event.put("result", result);
+			if (result != null) {
+				event.put("result", result);
+			}
 			_successCallback.callAsync(_connection.getKrollObject(), event);
 		}
 	}

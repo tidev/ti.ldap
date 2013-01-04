@@ -148,7 +148,6 @@ of the `success` callback.
 
 ## Properties
 
-* async[boolean]: Indicates whether to operate in asynchronous mode.
 * sizeLimit[int]: The maximum size in bytes for an LDAP message that a connection will attempt to read from the directory server, or 0 if no limit will be enforced.
 * timeLimit[int]: The maximum length of time (in seconds) that a request should be allowed to continue before giving up.
 * useTLS[boolean]: Indicates whether to use TLS when sending requests to the LDAP server

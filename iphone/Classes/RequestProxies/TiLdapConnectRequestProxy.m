@@ -34,7 +34,6 @@
         [_connection startTLS];
         
         // Apply all of the supported properties (need to do this after _ld is created)
-        [_connection setAsync];
         [_connection setSizeLimit];
         [_connection setTimeLimit];
     }
