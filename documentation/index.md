@@ -6,7 +6,10 @@ Provides access to LDAP directory servers by utilizing the [OpenLDAP library][op
 
 ## Dependencies
 
-This module requires Release 2.1.2 or newer of the Titanium SDK.
+This module requires Release 2.1.3 or newer of the Titanium SDK.
+
+This module does not include support for the ARMv6 architecture on iOS. Refer to the [Titanium Mobile 2.1.3.RC Release Notes](http://docs.appcelerator.com/titanium/release-notes/?version=2.1.3.RC)
+for further details about ARMv6 support.
 
 ## Getting Started
 
