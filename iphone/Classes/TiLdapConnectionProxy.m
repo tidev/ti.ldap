@@ -103,24 +103,35 @@
 -(NSString*)getFilePath:(id)url
 {
     NSString *filePath = nil;
-	if ([url isKindOfClass:[TiFilesystemFileProxy class]])	{
-        filePath = [(TiFilesystemFileProxy*)url nativePath];
-	} else if ([url isKindOfClass:[NSString class]]) {
-		filePath = [TiUtils stringValue:url];
+    if ([url isKindOfClass:[TiFilesystemFileProxy class]])	{
+        filePath = [(TiFilesystemFileProxy*)url path];
+    } else if ([url isKindOfClass:[NSString class]]) {
+        filePath = [TiUtils stringValue:url];
     } else if ([url isKindOfClass:[TiBlob class]]) {
-        filePath = [(TiBlob*)url nativePath];
-	}
+        filePath = [(TiBlob*)url path];
+    }
+    return filePath;
 }
 
 -(void)startTLS
 {
     bool useTLS = [TiUtils boolValue:[self valueForUndefinedKey:@"useTLS"] def:NO];
     if (useTLS) {
-    	id certFile = [self valueForUndefinedKey:@"certFile"];
+        id certFile = [self valueForUndefinedKey:@"certFile"];
         if (!IS_NULL_OR_NIL(certFile)) {
             NSString *certFilePath = [self getFilePath:certFile];
             NSLog(@"[DEBUG] Using certificate: %@", certFilePath);
-            ldap_set_option(_ld, LDAP_OPT_X_TLS_CERTFILE, [certFilePath UTF8String]);
+            ldap_set_option(NULL, LDAP_OPT_X_TLS_CERTFILE, [certFilePath UTF8String]);
+            
+            id caCertFile = [self valueForUndefinedKey:@"caCertFile"];
+            if (!IS_NULL_OR_NIL(caCertFile)) {
+                NSString *caCertFilePath = [self getFilePath:caCertFile];
+                NSLog(@"[DEBUG] Using ca certificate: %@", caCertFilePath);
+                ldap_set_option(NULL, LDAP_OPT_X_TLS_CACERTFILE, [caCertFilePath UTF8String]);
+            }
+        } else {
+            int allow = LDAP_OPT_X_TLS_ALLOW;
+            ldap_set_option(NULL, LDAP_OPT_X_TLS_REQUIRE_CERT, &allow);
         }
         
         NSLog(@"[INFO] Initializing TLS");
