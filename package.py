@@ -42,7 +42,10 @@ def check_file(args,zin):
 def move_zip(zin, zout):
     for name in zin.namelist():
         contents = zin.read(name)
-        zout.writestr(name, contents)
+        info = zipfile.ZipInfo(name)
+        # Ensure the user has permission to read the the contents
+        info.external_attr = 0755 << 16L
+        zout.writestr(info, contents)
 
 def package_modules(args):
     if os.path.exists('temp.zip'):

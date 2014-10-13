@@ -33,28 +33,26 @@ function createViewInWindow(win, viewInfo)
 
 exports.openAppWindow = function (viewInfo)
 {
-	var appWin = Ti.UI.createWindow({
-		backgroundColor:'white',
-		layout:'vertical',
-		tabBarHidden:true,
-		exitOnClose: true
-	});
-
 	if (Ti.Platform.name == 'android') {
+		var appWin = Ti.UI.createWindow({
+			backgroundColor:'white',
+			layout:'vertical',
+			tabBarHidden:true,
+			exitOnClose: true
+		});
 		createViewInWindow(appWin, viewInfo);
+		appWin.open();
 	} else {
 		var win = Ti.UI.createWindow({
 			backgroundColor:'white',
 			layout:'vertical'
 		});
 		createViewInWindow(win, viewInfo);
-		nav = Ti.UI.iPhone.createNavigationGroup({
+		nav = Ti.UI.iOS.createNavigationWindow({
 			window:win
 		});
-		appWin.add(nav);
+		nav.open();
 	}
-
-	appWin.open();
 };
 
 exports.push = function (viewInfo)
@@ -69,6 +67,6 @@ exports.push = function (viewInfo)
 	if (Ti.Platform.name == 'android') {
 		win.open({ modal:true, animated:true });
 	} else {
-		nav.open(win, { animated:true });
+		nav.openWindow(win, { animated:true });
 	}
 };
