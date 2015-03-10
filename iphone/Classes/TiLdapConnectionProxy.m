@@ -11,7 +11,7 @@
 #import "TiLdapSearchRequestProxy.h"
 #import "TiLdapConnectRequestProxy.h"
 
-#import "TiFilesystemFileProxy.h"
+#import "TiFile.h"
 #import "TiUtils.h"
 
 @implementation TiLdapConnectionProxy
@@ -103,8 +103,8 @@
 -(NSString*)getFilePath:(id)url
 {
     NSString *filePath = nil;
-    if ([url isKindOfClass:[TiFilesystemFileProxy class]])	{
-        filePath = [(TiFilesystemFileProxy*)url path];
+    if ([url isKindOfClass:[TiFile class]])	{
+        filePath = [(TiFile*)url path];
     } else if ([url isKindOfClass:[NSString class]]) {
         filePath = [TiUtils stringValue:url];
     } else if ([url isKindOfClass:[TiBlob class]]) {
