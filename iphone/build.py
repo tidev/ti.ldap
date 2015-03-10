@@ -101,7 +101,7 @@ def compile_js(manifest,config):
 
 	from tools import splice_code
 
-	assets_router = os.path.join(cwd,'Classes','TiLdaplModuleAssets.m')
+	assets_router = os.path.join(cwd,'Classes','TiLdapModuleAssets.m')
 	splice_code(assets_router, 'asset', root_asset_content)
 	splice_code(assets_router, 'resolve_asset', module_asset_content)
 

@@ -1,6 +1,6 @@
 # Change Log
 <pre>
-v1.1.2  [MOD-1800] Fixed architecture issues
+v1.1.2 	[MOD-1800] Fixed architecture issues
 
 v1.1.1 	[TIMOB-18092] Added architectures to manifest
 
