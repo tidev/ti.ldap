@@ -22,3 +22,8 @@ xcuserdata
 
 .idea/
 libs/
+
+android/assets
+android/documentation
+android/example
+android/LICENSE
