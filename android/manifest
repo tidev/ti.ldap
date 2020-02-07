@@ -2,18 +2,17 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 3.0.0
+version: 4.0.0
 apiversion: 4
-architectures: arm64-v8a armeabi-v7a x86
+architectures: arm64-v8a armeabi-v7a x86 x86_64
 description: LDAP for Titanium
 author: Jeff English
 license: Appcelerator Commercial License
 copyright: Copyright (c) 2012-2017 by Axway, Inc.
-
 
 # these should not be edited
 name: ldap
 moduleid: ti.ldap
 guid: 4cf02ff0-f57e-4643-b0bd-98077e9956ec
 platform: android
-minsdk: 7.0.0
+minsdk: 9.0.0
