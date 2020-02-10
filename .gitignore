@@ -28,6 +28,8 @@ android/documentation
 android/example
 android/LICENSE
 
+iphone/metadata.json
+
 iphone/openldap/ports/security/cyrus-sasl/cyrus-sasl
 iphone/openldap/ports/security/cyrus-sasl/cyrus-sasl-2.1.23/
 iphone/openldap/ports/security/cyrus-sasl/cyrus-sasl-2.1.23.tar.gz
