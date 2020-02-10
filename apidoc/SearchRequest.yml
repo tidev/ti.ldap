@@ -1,0 +1,10 @@
+---
+name: Modules.LDAP.SearchRequest
+extends: Titanium.Proxy
+summary: Provides access to an outstanding asynchronous request.
+description: |
+    It is created by a call to the [simpleBind](Modules.LDAP.Connection.simpleBind),
+    [saslBind](Modules.LDAP.Connection.saslbind), or [search](Modules.LDAP.Connection.search) methods.
+methods:
+  - name: abandon
+    summary: Sends a LDAP abandon request for an outstanding asynchronous operation in progress.

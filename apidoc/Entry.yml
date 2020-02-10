@@ -1,0 +1,44 @@
+---
+name: Modules.LDAP.Entry
+extends: Titanium.Proxy
+summary: |
+    Provides access to the entry object retrieved from a call to [SearchResult.firstEntry](Modules.LDAP.SearchResult.firstEntry)
+    or [SearchResult.nextEntry](Modules.LDAP.SearchResult.nextEntry).
+methods:
+  - name: getDn
+    summary: Retrieves the DN for this search entry
+    returns:
+      type: String
+
+  - name: firstAttribute
+    summary: Retrieves the name of the first attribute for the entry. Returns null if there are no attributes.
+    returns:
+      type: String
+
+  - name: nextAttribute
+    summary: |
+        Retrieves the name of the next attribute for the entry (and advances the pointer/cursor).
+        Returns null if there are no more attributes.
+    returns:
+      type: String
+     
+  - name: getValues
+    summary: Retrieves an array of string values for the specified attribute. Returns null if there are no values.
+    parameters:
+      - name: name
+        type: String
+        summary: The name of the attribute to retrieve
+    returns:
+      type: Array<String>
+
+  - name: getValuesLen
+    summary: |
+        Retrieves an array of Titanium.Blob values for the specified attribute. This method should be used when the
+        attribute values are binary in nature and not suitable to be returned as an array of strings. Returns null
+        if there are no values.
+    parameters:
+      - name: name
+        type: String
+        summary: The name of the attribute to retrieve
+    returns:
+      type: Array<Titanium.Blob>

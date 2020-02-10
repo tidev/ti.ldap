@@ -1,0 +1,293 @@
+---
+name: Modules.LDAP.Connection
+extends: Titanium.Proxy
+summary: The `connection` object provides access to the LDAP operations.
+createable: true
+properties:
+  - name: sizeLimit
+    type: Number
+    summary: The maximum size in bytes for an LDAP message that a connection will attempt to read from the directory server, or 0 if no limit will be enforced.
+
+  - name: timeLimit
+    type: Number
+    summary: The maximum length of time (in seconds) that a request should be allowed to continue before giving up.
+
+  - name: useTLS
+    type: Boolean
+    summary: Indicates whether to use TLS when sending requests to the LDAP server
+
+  - name: certFile
+    type: [String, Titanium.Blob, Titanium.Filesystem.File]
+    summary: Path of the certificate file
+
+methods:
+  - name: connect
+    summary: Initializes a connection to the specified LDAP server, starting TLS if necessary.
+    parameters:
+      - name: uri
+        type: String
+        summary: A string containing the uri of the server.
+        default: 'ldap://127.0.0.1:389'
+      - name: success
+        type: Callback<Modules.LDAP.Success>
+        summary: A callback function that is executed if the request succeeds
+        optional: true
+      - name: error
+        type: Callback<Modules.LDAP.Error>
+        summary: A callback function that is executed if the request fails
+        optional: true
+    returns:
+      type: void
+
+  - name: disconnect
+    summary: Disconnects from the LDAP server.
+    returns:
+      type: void
+
+  - name: simpleBind
+    summary: Performs an LDAP simple bind operation, which authenticates using a bind DN and password, and returns a request object.
+    parameters:
+      - name: options
+        type: Modules.LDAP.SimpleBindOptions
+        summary: An object that specifies properties for the request
+      - name: success
+        type: Callback<Modules.LDAP.Success>
+        summary: A callback function that is executed if the request succeeds
+        optional: true
+      - name: error
+        type: Callback<Modules.LDAP.Error>
+        summary: A callback function that is executed if the request fails
+        optional: true
+    returns:
+      type: Modules.LDAP.SearchRequest
+
+  - name: saslBind
+    summary: Performs an LDAP SASL bind request and returns a Request object. A SASL bind includes a SASL mechanism name and optional set of credentials.
+    parameters:
+      - name: options
+        type: Modules.LDAP.SASLBindOptions
+        summary: An object that specifies properties for the request
+      - name: success
+        type: Callback<Modules.LDAP.Success>
+        summary: A callback function that is executed if the request succeeds
+        optional: true
+      - name: error
+        type: Callback<Modules.LDAP.Error>
+        summary: A callback function that is executed if the request fails
+        optional: true
+    returns:
+      type: Modules.LDAP.SearchRequest
+
+  - name: search
+    summary: |
+        Performs a search on an LDAP directory server and returns a Request object. If the
+        search is successful, a SearchResult object is returned in the `result` property
+        of the `success` callback.
+    parameters:
+      - name: options
+        type: Modules.LDAP.SearchOptions
+        summary: An object that specifies properties for the request
+      - name: success
+        type: Callback<Modules.LDAP.SearchSuccess>
+        summary: A callback function that is executed if the request succeeds
+        optional: true
+      - name: error
+        type: Callback<Modules.LDAP.Error>
+        summary: A callback function that is executed if the request fails
+        optional: true
+    returns:
+      type: Modules.LDAP.SearchRequest
+
+examples:
+  - title: Connect
+    example: |
+        connection.connect({
+          uri: "ldap://10.10.1.0:389"
+        }, function(e) {
+          // Success
+          Ti.API.info(JSON.stringify(e));
+        }, function(e) {
+          // Error
+          Ti.API.error(JSON.stringify(e));
+          alert(e.message);
+        });
+ 
+  - title: Simple Bind
+    example: |
+        connection.simpleBind({
+          dn: dn.value,
+          password: password.value
+        }, function(e) {
+          // Success
+          Ti.API.info(JSON.stringify(e));
+        }, function(e) {
+          // Error
+          Ti.API.error(JSON.stringify(e));
+          alert(e.message);
+        });
+
+  - title: SASL Bind
+    example: |
+        connection.saslBind({
+          mech: "DIGEST-MD5",
+          password: password.value,
+          authorizationId: authorizationId.value,
+          authenticationId: authenticationId.value
+        }, function(e) {
+          // Success
+          Ti.API.info(JSON.stringify(e));
+        }, function(e) {
+          // Error
+          Ti.API.error(JSON.stringify(e));
+          alert(e.message);
+        });
+
+  - title: Search
+    example: |
+        var searchRequest = connection.search({
+          async: true,
+          base: base.value,
+          scope: ldap.SCOPE_CHILDREN,
+          filter: filter.value.length > 0 ? filter.value : null,
+          attrs: attrs.value.length > 0 ? attrs.value.split(',') : null,
+          async: asyncSwitch.value,
+          timeLimit: timeLimit.value.length > 0 ? timeLimit.value : null
+        }, function(e) {
+          showSearchResult(e.result);
+        }, function(e) {
+          // Error
+          Ti.API.error(JSON.stringify(e));
+          alert(e.message);
+        });
+
+---
+name: Modules.LDAP.Success
+summary: Simple object passed to the `success` callback function from <Modules.LDAP.Connection> methods
+properties:
+  - name: method
+    type: String
+    summary: Name of the method called.
+
+---
+name: Modules.LDAP.SearchSuccess
+summary: Simple object passed to the `success` callback function from <Modules.LDAP.Connection.search>
+extends: Modules.LDAP.Success
+properties:
+  - name: result
+    type: Modules.LDAP.SearchResult
+    summary: object containing the results of the search
+
+---
+name: Modules.LDAP.Error
+summary: Simple object passed to the `error` callback functions from <Modules.LDAP.Connection> methods
+properties:
+  - name: method
+    type: String
+    summary: Name of the method called.
+  
+  - name: error
+    type: Number
+    summary: Error code
+
+  - name: message
+    type: String
+    summary: Error message
+
+---
+name: Modules.LDAP.SimpleBindOptions
+summary: Simple object passed to the <Modules.LDAP.Connection.simpleBind> method
+properties:
+  - name: dn
+    type: String
+    summary: The bind DN
+    optional: true
+
+  - name: password
+    type: String
+    summary: The password 
+    optional: true
+
+---
+name: Modules.LDAP.SASLBindOptions
+summary: Simple object passed to the <Modules.LDAP.Connection.saslBind> method
+properties:
+  - name: mech
+    type: String
+    summary: The name of the SASL mechanism to use (ANONYMOUS, CRAM-MD5, DIGEST-MD5, EXTERNAL, GSSAPI, PLAIN)
+
+  - name: password
+    type: String
+    summary: The password 
+    optional: true
+
+  - name: realm
+    type: String
+    summary: The realm for the request
+    optional: true
+
+  - name: authorizationId
+    type: String
+    summary: The authorization ID
+    optional: true
+
+  - name: authenticationId
+    type: String
+    summary: The authentication ID
+    optional: true
+
+---
+name: Modules.LDAP.SearchOptions
+summary: Simple object passed to the <Modules.LDAP.Connection.search> method
+properties:
+  - name: async
+    type: Boolean
+    default: true
+    summary: Whether the request should be done asynchronously
+    optional: true
+
+  - name: base
+    type: String
+    summary: The base DN to use
+
+  - name: scope
+    type: Number
+    summary: The range of entries relative to the base DN that may be considered potential matches
+    optional: true
+    constants: Modules.LDAP.SCOPE_*
+    default: Modules.LDAP.SCOPE_DEFAULT
+
+  - name: filter
+    type: String
+    summary: The criteria for determining which entries should be returned
+    optional: true
+    default: "(objectClass=*)"
+
+  - name: attrs
+    type: Array<String>
+    summary: The set of attributes that should be included in matching entries
+    description: |
+        If no attributes are provided, then the server will default to returning all user attributes. If a specified set of
+        attributes is given, then only those attributes will be included. Values that may be included to
+        indicate a special meaning include the following constants:
+          * ALL\_USER\_ATTRIBUTES
+          * ALL\_OPERATIONAL\_ATTRIBUTES
+          * NO\_ATTRS
+    optional: true
+
+  - name: attrsOnly
+    type: Boolean
+    summary: Whether matching entries should include only attribute names, or both attribute names and values
+    optional: true
+    default: false
+
+  - name: sizeLimit
+    type: Number
+    summary: The maximum number of entries that should be returned from the search
+    optional: true
+    default: 0 (no limit)
+  
+  - name: timeLimit
+    type: Number
+    summary: The maximum length of time in seconds that the server should spend processing the search
+    optional: true
+    default: 0 (no limit)

@@ -1,0 +1,21 @@
+---
+name: Modules.LDAP.SearchResult
+extends: Titanium.Module
+summary: Provides access to the result of a <Modules.LDAP.Connection.search> request.
+methods:
+  - name: countEntries
+    summary: Retrieves the number of matching entries for the search operation
+    returns:
+      type: Number
+
+  - name: firstEntry
+    summary: Retrieves the first entry in the search results list. Returns null if there are no entries.
+    returns:
+      type: Modules.LDAP.Entry
+
+  - name: nextEntry
+    summary: |
+        Retrieves the next entry in the search results list 9and advances the list pointer/cursor).
+        Returns null if there are no more entries.
+    returns:
+      type: Modules.LDAP.Entry
