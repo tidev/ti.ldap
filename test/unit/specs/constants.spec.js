@@ -16,7 +16,6 @@ describe('ti.ldap', function () {
 	});
 
 	describe('constants', () => {
-
 		it('SUCCESS', () => {
 			expect(LDAP.SUCCESS).toEqual(jasmine.any(Number));
 		});
@@ -57,5 +56,4 @@ describe('ti.ldap', function () {
 			});
 		});
 	});
-
 });
