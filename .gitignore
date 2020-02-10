@@ -41,3 +41,5 @@ iphone/openldap/ports/security/openssl/openssl-1.0.0a.tar.gz
 iphone/openldap/ports/security/openssl/openssl-1.0.0a.tar.gz.md5
 
 node_modules/
+
+TESTS-*.xml
