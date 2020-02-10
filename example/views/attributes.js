@@ -2,7 +2,7 @@
  * View for displaying attributes for the selected entry
  */
 
-var platform = require('utility/platform');
+var platform = require('../utility/platform');
 
 var entry = null;
 var table = null;
@@ -22,8 +22,8 @@ exports.create = function (win) {
 	win.title = 'Attributes';
 
 	table = Ti.UI.createTableView({
-		width:Ti.UI.FILL,
-		height:Ti.UI.FILL
+		width: Ti.UI.FILL,
+		height: Ti.UI.FILL
 	});
 	win.add(table);
 
@@ -39,15 +39,15 @@ function populateTable() {
 		row.add(Ti.UI.createLabel({
 			text: attribute,
 			textAlign: 'left',
-			font: {fontSize:18+u, fontWeight:'bold'},
+			font: { fontSize: 18 + u, fontWeight: 'bold' },
 			left: 4
 		}));
 		row.add(Ti.UI.createLabel({
-			text: value ? value : "Attribute has no value",
+			text: value ? value : 'Attribute has no value',
 			textAlign: 'left',
-			font: {fontSize:14+u},
+			font: { fontSize: 14 + u },
 			left: 4,
-			color: 'darkgray'	
+			color: 'darkgray'
 		}));
 
 		return row;
@@ -59,11 +59,11 @@ function populateTable() {
 		var attribute = entry.firstAttribute();
 		while (attribute) {
 			// Retrieve the attribute values -- this code assumes that each
-			// attribute is a string value. Use `getValuesLen` to retrieve 
+			// attribute is a string value. Use `getValuesLen` to retrieve
 			// binary attribute values as blobs
 			var values = entry.getValues(attribute);
 			if (values) {
-				for (var i=0; i<values.length; i++) {
+				for (var i = 0; i < values.length; i++) {
 					tableRows.push(createRow(attribute, values[i]));
 				}
 			} else {
@@ -74,5 +74,3 @@ function populateTable() {
 	}
 	table.setData(tableRows);
 }
-
-

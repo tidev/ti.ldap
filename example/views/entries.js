@@ -5,34 +5,33 @@
 var searchResult = null;
 var table = null;
 
-exports.initialize = function(viewInfo) {
+exports.initialize = function (viewInfo) {
 	// The searchResult property contains the search result from the request
 	searchResult = viewInfo.searchResult;
 };
 
-exports.cleanup = function() {
+exports.cleanup = function () {
 	searchResult = null;
 	table = null;
 };
 
-exports.create = function(win) {
+exports.create = function (win) {
 	win.title = 'Search Entries';
-	
+
 	table = Ti.UI.createTableView({
 		width: Ti.UI.FILL,
 		height: Ti.UI.FILL
 	});
 	win.add(table);
-	table.addEventListener('click', function(e) {
+	table.addEventListener('click', function (e) {
 		if (e.row.hasChild) {
-        	require('utility/navigator').push({
-        		entry: e.row.entry,
-        		viewName: 'attributes'
-        	});
-
+			require('../utility/navigator').push({
+				entry: e.row.entry,
+				viewName: 'attributes'
+			});
 		}
 	});
-	
+
 	populateTable();
 };
 
@@ -41,9 +40,9 @@ function populateTable() {
 		var dn = entry.getDn();
 		var attribute = entry.firstAttribute();
 		return Ti.UI.createTableViewRow({
-			title:dn,
-			entry:entry,
-			hasChild:(attribute != null)
+			title: dn,
+			entry: entry,
+			hasChild: (attribute !== null && attribute !== undefined)
 		});
 	}
 
@@ -58,5 +57,4 @@ function populateTable() {
 	}
 	table.setData(tableRows);
 }
-
 
