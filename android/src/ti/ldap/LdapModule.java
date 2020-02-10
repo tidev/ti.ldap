@@ -42,4 +42,10 @@ public class LdapModule extends KrollModule
 	public static final String ALL_OPERATIONAL_ATTRIBUTES = SearchRequest.ALL_OPERATIONAL_ATTRIBUTES;
 	@Kroll.constant
 	public static final String NO_ATTRS = SearchRequest.NO_ATTRIBUTES;
+
+	@Override
+	public String getApiName()
+	{
+		return "Ti.LDAP";
+	}
 }
