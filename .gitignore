@@ -27,3 +27,6 @@ android/assets
 android/documentation
 android/example
 android/LICENSE
+
+
+node_modules/
