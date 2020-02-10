@@ -43,7 +43,7 @@ PACKAGE_DIR				= $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 PACKAGE_FILEEXE				= tar.gz
 PACKAGE_FILE				= $(PACKAGE_DIR).$(PACKAGE_FILEEXE)
 PACKAGE_MD5				= $(PACKAGE_FILE).md5
-PACKAGE_URL				= http://www.openssl.org/source/$(PACKAGE_FILE)
+PACKAGE_URL				= https://ftp.openssl.org/source/old/1.0.0/$(PACKAGE_FILE)
 PACKAGE_WEBSITE				= http://www.openssl.org/
 PACKAGE_LICENSE_FILE			= build-aux/LICENSE
 
