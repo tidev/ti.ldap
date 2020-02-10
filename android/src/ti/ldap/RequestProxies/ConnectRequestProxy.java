@@ -8,60 +8,55 @@
 
 package ti.ldap.RequestProxies;
 
-import java.util.HashMap;
-
-import javax.net.SocketFactory;
-
-import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.annotations.Kroll;
-
+import android.util.Log;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.LDAPURL;
 import com.unboundid.ldap.sdk.ResultCode;
-
-import android.util.Log;
-
+import java.util.HashMap;
+import javax.net.SocketFactory;
+import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.annotations.Kroll;
 import ti.ldap.ConnectionProxy;
 
 @Kroll.proxy
-public class ConnectRequestProxy extends RequestProxy {
-	
+public class ConnectRequestProxy extends RequestProxy
+{
+
 	private static final String LCAT = "LDAP";
-	
-	public ConnectRequestProxy(ConnectionProxy connection) {
+
+	public ConnectRequestProxy(ConnectionProxy connection)
+	{
 		super("connect", connection);
 	}
-	
+
 	@Override
 	public LDAPResult execute(KrollDict args, Boolean async)
 	{
-        String host;
-        int port;
-        try {
-            LDAPURL url = new LDAPURL(args.optString("uri", "ldap://127.0.0.1:389"));
-            host = url.getHost();
-            port = url.getPort();
-        }
-        catch (LDAPException e) {
-            Log.e(LCAT, "Invalid uri specified: " + e.toString());
-            return null;
-        }
+		String host;
+		int port;
+		try {
+			LDAPURL url = new LDAPURL(args.optString("uri", "ldap://127.0.0.1:389"));
+			host = url.getHost();
+			port = url.getPort();
+		} catch (LDAPException e) {
+			Log.e(LCAT, "Invalid uri specified: " + e.toString());
+			return null;
+		}
 
-        Log.d(LCAT, "LDAP initialize with host: " + host + " and port: " + port);
+		Log.d(LCAT, "LDAP initialize with host: " + host + " and port: " + port);
 
 		try {
-	        SocketFactory socketFactory = _connection.startTLS();
-			
-       		LDAPConnection ld = new LDAPConnection(socketFactory, _connection.options(), host, port);
-       		_connection.setLd(ld);
-       		
-       		return new LDAPResult(0, ResultCode.SUCCESS);
-        }
-        catch (LDAPException e) {
-            Log.e(LCAT, "Error occurred during LDAP initialization: " + e.toString()); 
-            return e.toLDAPResult();
-        }
+			SocketFactory socketFactory = _connection.startTLS();
+
+			LDAPConnection ld = new LDAPConnection(socketFactory, _connection.options(), host, port);
+			_connection.setLd(ld);
+
+			return new LDAPResult(0, ResultCode.SUCCESS);
+		} catch (LDAPException e) {
+			Log.e(LCAT, "Error occurred during LDAP initialization: " + e.toString());
+			return e.toLDAPResult();
+		}
 	}
 }

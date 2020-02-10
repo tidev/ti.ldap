@@ -8,14 +8,13 @@
 
 package ti.ldap;
 
+import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.ldap.sdk.SearchRequest;
+import com.unboundid.ldap.sdk.SearchScope;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.unboundid.ldap.sdk.ResultCode;
-import com.unboundid.ldap.sdk.SearchScope;
-import com.unboundid.ldap.sdk.SearchRequest;
-
-@Kroll.module(name="Ldap", id="ti.ldap")
+@Kroll.module(name = "Ldap", id = "ti.ldap")
 public class LdapModule extends KrollModule
 {
 	public LdapModule()
@@ -23,16 +22,24 @@ public class LdapModule extends KrollModule
 		super();
 	}
 
-    @Kroll.constant public static final int SUCCESS = ResultCode.SUCCESS_INT_VALUE;
+	@Kroll.constant
+	public static final int SUCCESS = ResultCode.SUCCESS_INT_VALUE;
 
-    @Kroll.constant public static final int SCOPE_BASE = SearchScope.BASE_INT_VALUE;
-    @Kroll.constant public static final int SCOPE_ONELEVEL = SearchScope.ONE_INT_VALUE;
-    @Kroll.constant public static final int SCOPE_SUBTREE = SearchScope.SUB_INT_VALUE;
-    @Kroll.constant public static final int SCOPE_CHILDREN = SearchScope.SUBORDINATE_SUBTREE_INT_VALUE;
-    @Kroll.constant public static final int SCOPE_DEFAULT = -1;
+	@Kroll.constant
+	public static final int SCOPE_BASE = SearchScope.BASE_INT_VALUE;
+	@Kroll.constant
+	public static final int SCOPE_ONELEVEL = SearchScope.ONE_INT_VALUE;
+	@Kroll.constant
+	public static final int SCOPE_SUBTREE = SearchScope.SUB_INT_VALUE;
+	@Kroll.constant
+	public static final int SCOPE_CHILDREN = SearchScope.SUBORDINATE_SUBTREE_INT_VALUE;
+	@Kroll.constant
+	public static final int SCOPE_DEFAULT = -1;
 
-    @Kroll.constant public static final String ALL_USER_ATTRIBUTES = SearchRequest.ALL_USER_ATTRIBUTES;
-    @Kroll.constant public static final String ALL_OPERATIONAL_ATTRIBUTES = SearchRequest.ALL_OPERATIONAL_ATTRIBUTES;
-    @Kroll.constant public static final String NO_ATTRS = SearchRequest.NO_ATTRIBUTES;
+	@Kroll.constant
+	public static final String ALL_USER_ATTRIBUTES = SearchRequest.ALL_USER_ATTRIBUTES;
+	@Kroll.constant
+	public static final String ALL_OPERATIONAL_ATTRIBUTES = SearchRequest.ALL_OPERATIONAL_ATTRIBUTES;
+	@Kroll.constant
+	public static final String NO_ATTRS = SearchRequest.NO_ATTRIBUTES;
 }
-

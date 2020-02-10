@@ -8,34 +8,33 @@
 
 package ti.ldap.ResultProxies;
 
+import com.unboundid.ldap.sdk.SearchResult;
+import com.unboundid.ldap.sdk.SearchResultEntry;
 import java.util.Iterator;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.unboundid.ldap.sdk.SearchResult;
-import com.unboundid.ldap.sdk.SearchResultEntry;
-
-
 @Kroll.proxy
-public class SearchResultProxy extends KrollProxy {
-	
+public class SearchResultProxy extends KrollProxy
+{
+
 	private final SearchResult _searchResult;
 	private Iterator<SearchResultEntry> _iterator = null;
-	
-	public SearchResultProxy(SearchResult searchResult) {
+
+	public SearchResultProxy(SearchResult searchResult)
+	{
 		super();
 		_searchResult = searchResult;
 	}
-	
+
 	@Kroll.method
 	public int countEntries()
 	{
 		int result = _searchResult.getEntryCount();
-		
+
 		return result;
 	}
-	
+
 	@Kroll.method
 	public EntryProxy firstEntry()
 	{
@@ -45,10 +44,10 @@ public class SearchResultProxy extends KrollProxy {
 			EntryProxy entryProxy = new EntryProxy(entry);
 			return entryProxy;
 		}
-		
+
 		return null;
 	}
-	
+
 	@Kroll.method
 	public EntryProxy nextEntry()
 	{
@@ -57,7 +56,7 @@ public class SearchResultProxy extends KrollProxy {
 			EntryProxy entryProxy = new EntryProxy(entry);
 			return entryProxy;
 		}
-		
+
 		return null;
 	}
 }
