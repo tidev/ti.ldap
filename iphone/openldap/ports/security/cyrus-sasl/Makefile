@@ -43,7 +43,7 @@ PACKAGE_DIR				= $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 PACKAGE_FILEEXE				= tar.gz
 PACKAGE_FILE				= $(PACKAGE_DIR).$(PACKAGE_FILEEXE)
 PACKAGE_MD5				= $(PACKAGE_FILE).md5
-PACKAGE_URL				= http://ftp.andrew.cmu.edu/pub/cyrus-mail/$(PACKAGE_FILE)
+PACKAGE_URL				= https://ftp.osuosl.org/pub/blfs/conglomeration/cyrus-sasl/$(PACKAGE_FILE)
 PACKAGE_WEBSITE				= http://asg.web.cmu.edu/sasl/
 PACKAGE_LICENSE_FILE			= build-aux/COPYING
 
