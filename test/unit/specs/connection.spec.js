@@ -109,16 +109,13 @@ describe('ti.ldap', function () {
 						connection.disconnect();
 						finish(); // uhhhh, maybe we should check the results?
 					}, e => {
-						expect(false).toBeTrue();
-						finish(new Error('expected to sucessfully search'));
+						finish(new Error(`expected to sucessfully search: ${e.message}`));
 					});
 				}, e => {
-					expect(false).toBeTrue();
-					finish(new Error('expected to sucessfully bind'));
+					finish(new Error(`expected to sucessfully bind: ${e.message}`));
 				});
 			}, e => {
-				expect(false).toBeTrue();
-				finish(new Error('expected to successfully connect'));
+				finish(new Error(`expected to successfully connect: ${e.message}`));
 			});
 		});
 	});
